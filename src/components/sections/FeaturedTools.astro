@@ -26,9 +26,13 @@ const { heading, intro, tools, id } = Astro.props;
 
 <section class="section" id={id}>
   <div class="container">
-    {heading && <h2>{heading}</h2>}
-    {intro && <p class="lead" style="margin-bottom: var(--sp-5);">{intro}</p>}
-    <div class="grid grid-3">
+    {(heading || intro) && (
+      <div class="section-head">
+        {heading && <h2>{heading}</h2>}
+        {intro && <p class="lead">{intro}</p>}
+      </div>
+    )}
+    <div class="grid grid-4">
       {tools.map((t) => (
         <ToolCard title={t.title} href={t.href} summary={t.summary} tag={t.tag} />
       ))}

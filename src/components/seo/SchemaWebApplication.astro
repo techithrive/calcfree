@@ -18,6 +18,7 @@ interface Props {
   publisherLogo?: string;
   priceCurrency?: string;
   dateModified?: string;
+  about?: { name: string; url?: string }[];
 }
 
 const {
@@ -32,6 +33,7 @@ const {
   publisherLogo = '/logo.svg',
   priceCurrency = 'GBP',
   dateModified,
+  about = [],
 } = Astro.props;
 
 const pageUrl = url ?? absoluteUrl(Astro.url.pathname);
@@ -46,6 +48,9 @@ const data = {
   operatingSystem: 'Any',
   isAccessibleForFree: true,
   dateModified,
+  about: about.length
+    ? about.map((e) => ({ '@type': 'Thing', name: e.name, sameAs: e.url || undefined }))
+    : undefined,
   offers: {
     '@type': 'Offer',
     price: '0',

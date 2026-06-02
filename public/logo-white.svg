@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48" role="img" aria-label="CalcFree">
+  <g fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8 H9 V40 H16" />
+    <path d="M32 8 H39 V40 H32" />
+  </g>
+  <g fill="#2dd4bf">
+    <rect x="17.5" y="19.5" width="13" height="3.4" rx="1.7" />
+    <rect x="17.5" y="26.5" width="13" height="3.4" rx="1.7" />
+  </g>
+  <text x="54" y="33" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="-0.5">
+    <tspan fill="#ffffff">Calc</tspan><tspan fill="#2dd4bf">Free</tspan>
+  </text>
+</svg>

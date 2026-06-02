@@ -74,13 +74,19 @@ const reviewedLabel = lastReviewed
 
   <Breadcrumbs items={breadcrumbs} />
 
-  <article class="section" style="padding-top: var(--sp-4);">
-    <div class="container">
+  <!-- Tool hero band -->
+  <div class="tool-hero">
+    <div class="container container-narrow">
+      <span class="eyebrow">Calculator</span>
       <h1>{h1}</h1>
-      {intro && <p class="lead" style="margin-top: var(--sp-3);">{intro}</p>}
+      {intro && <p class="lead">{intro}</p>}
+    </div>
+  </div>
 
+  <article class="section" style="padding-top: var(--sp-6);">
+    <div class="container container-narrow">
       {quickAnswer && (
-        <div class="callout" style="margin-top: var(--sp-5);">
+        <div class="callout" style="margin-top: 0;">
           <strong>In short:</strong> {quickAnswer}
         </div>
       )}
@@ -89,16 +95,16 @@ const reviewedLabel = lastReviewed
 
       {show('after-intro') && <AdSlot size="leaderboard" />}
 
-      {/* Calculator + result. The route supplies the interactive UI here.
-          No ad ever sits between input and result. */}
-      <div class="calc-wrap" style="margin-top: var(--sp-5);">
+      {/* Calculator + result. No ad ever sits between input and result. */}
+      <div class="calc-wrap" style="margin-top: var(--sp-6);">
+        <h2 class="calc-heading">Try the calculator</h2>
         <slot name="calculator" />
       </div>
 
       {show('after-result') && <AdSlot size="rectangle" />}
 
       {/* Assumptions + source */}
-      <div class="callout" style="margin-top: var(--sp-6);">
+      <div class="callout callout-assume" style="margin-top: var(--sp-6);">
         <p style="margin:0 0 var(--sp-2);"><strong>What this assumes</strong></p>
         <div class="prose"><slot name="assumptions" /></div>
         {sourceUrl && (

@@ -1,30 +1,34 @@
 ---
 /**
  * ToolCard — a single tool, used in homepage clusters, category grids and
- * related-tools sections. Accepts primitive props so any parent can build the
- * href (keeps the card decoupled from the content collection shape).
+ * related-tools sections. Icon + title + summary + a "use it" cue.
  */
+import Icon from '../ui/Icon.astro';
+
 interface Props {
   title: string;
   href: string;
   summary?: string;
   tag?: string;
+  icon?: string;
 }
 
-const { title, href, summary, tag } = Astro.props;
+const { title, href, summary, tag, icon = 'calculator' } = Astro.props;
 ---
 
-<a class="card card-link" href={href}>
+<a class="card card-link card-tool" href={href}>
+  <span class="card-icon" aria-hidden="true"><Icon name={icon} size={22} /></span>
   {tag && <span class="tag">{tag}</span>}
   <h3>{title}</h3>
   {summary && <p>{summary}</p>}
+  <span class="card-cue">Open calculator</span>
 </a>
 
 <style>
-  .card-link .tag {
+  .card-tool .tag {
     margin-bottom: var(--sp-2);
   }
-  .card-link h3 {
+  .card-tool h3 {
     margin-bottom: var(--sp-1);
   }
 </style>

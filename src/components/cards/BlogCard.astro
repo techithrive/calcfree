@@ -1,49 +1,76 @@
 ---
 /**
- * BlogCard — used on the blog index, homepage "latest from the blog" and
- * related-posts sections. Date is pre-formatted by the parent or formatted here
- * with a simple en-GB fallback.
+ * BlogCard — blog index, homepage "latest", and related-posts. Includes a
+ * lightweight SVG thumbnail band (category-tinted, no stock art), an optional
+ * category label, the date and the excerpt — for fast scanning at scale.
  */
+import Icon from '../ui/Icon.astro';
+
 interface Props {
   title: string;
   href: string;
   excerpt?: string;
   date?: Date | string;
   author?: string;
+  category?: string;
+  icon?: string;
 }
 
-const { title, href, excerpt, date, author } = Astro.props;
+const { title, href, excerpt, date, author, category, icon = 'doc' } = Astro.props;
 
 let dateLabel = '';
 if (date) {
   const d = date instanceof Date ? date : new Date(date);
   if (!isNaN(d.valueOf())) {
-    dateLabel = d.toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
+    dateLabel = d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' });
   }
 }
 ---
 
 <a class="card card-link post" href={href}>
-  <h3>{title}</h3>
-  {excerpt && <p>{excerpt}</p>}
-  {(dateLabel || author) && (
-    <p class="post-meta muted text-sm">
-      {author && <span>{author}</span>}
-      {author && dateLabel && <span aria-hidden="true"> · </span>}
-      {dateLabel && <time>{dateLabel}</time>}
-    </p>
-  )}
+  <span class="post-thumb" aria-hidden="true"><Icon name={icon} size={30} /></span>
+  <div class="post-body">
+    {category && <span class="post-cat">{category}</span>}
+    <h3>{title}</h3>
+    {excerpt && <p>{excerpt}</p>}
+    {(dateLabel || author) && (
+      <p class="post-meta muted">
+        {author && <span>{author}</span>}
+        {author && dateLabel && <span aria-hidden="true"> · </span>}
+        {dateLabel && <time>{dateLabel}</time>}
+      </p>
+    )}
+  </div>
 </a>
 
 <style>
-  .post h3 {
-    margin-bottom: var(--sp-1);
+  .post {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
-  .post-meta {
-    margin-top: var(--sp-2);
+  .post-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 96px;
+    background:
+      radial-gradient(200px 120px at 70% 0%, var(--accent-tint-2) 0%, transparent 70%),
+      var(--accent-tint);
+    color: var(--accent-strong);
+    border-bottom: 1px solid var(--line);
   }
+  .post-body { padding: var(--sp-5); }
+  .post-cat {
+    display: inline-block;
+    font-size: var(--fs-200);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    margin-bottom: var(--sp-2);
+  }
+  .post h3 { margin: 0 0 var(--sp-1); font-size: var(--fs-500); }
+  .post-meta { margin-top: var(--sp-3); font-size: var(--fs-300); }
 </style>

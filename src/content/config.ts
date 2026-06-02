@@ -40,6 +40,8 @@ const calculatorInput = z.object({
   min: z.number().optional(),
   max: z.number().optional(),
   required: z.boolean().default(false),
+  optional: z.boolean().default(false),
+  advanced: z.boolean().default(false),
   help_text: z.string().optional(),
   // For select inputs only:
   options: z

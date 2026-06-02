@@ -1,9 +1,8 @@
 ---
 /**
- * Homepage. Composes hero + category cards + featured tools + trust section +
- * latest blog posts. Pulls from the homepage singleton; where a featured list
- * is empty it falls back to the full collection (so no empty curated sections),
- * and sections with no data simply don't render (no placeholders).
+ * Homepage. Hero → category explorer → featured tools → how it works →
+ * trust → methodology/editorial (dark) → latest articles. Empty categories are
+ * never shown. Sections band with alternating backgrounds.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/sections/Hero.astro';
@@ -11,13 +10,13 @@ import CategoryCard from '../components/cards/CategoryCard.astro';
 import FeaturedTools from '../components/sections/FeaturedTools.astro';
 import TrustSection from '../components/sections/TrustSection.astro';
 import RelatedBlogs from '../components/sections/RelatedBlogs.astro';
+import Icon from '../components/ui/Icon.astro';
 import { getCollection, getEntry } from 'astro:content';
-import { toolHref, categoryHref, blogHref, activeCategories } from '../lib/internal-links';
+import { toolHref, categoryHref, blogHref, activeCategories, categoryToolCount } from '../lib/internal-links';
 
 const hp = await getEntry('homepage', 'homepage');
 
-// Categories: featured if provided AND active, else all active. Empty
-// categories (no published tools) are never shown on the homepage.
+// Active categories only (>=1 published tool).
 const active = await activeCategories(1);
 const activeIds = new Set(active.map((c) => c.id));
 let categoryEntries = hp?.data.featured_categories?.length
@@ -25,28 +24,30 @@ let categoryEntries = hp?.data.featured_categories?.length
       (c): c is NonNullable<typeof c> => Boolean(c) && activeIds.has(c!.id)
     )
   : active;
-const categoryCards = categoryEntries
-  .filter((c): c is NonNullable<typeof c> => Boolean(c))
-  .map((c) => ({
-    title: c.data.title,
-    href: categoryHref(c),
-    description: c.data.meta_description,
-    icon: c.data.icon,
-  }));
+const categoryCards = await Promise.all(
+  categoryEntries
+    .filter((c): c is NonNullable<typeof c> => Boolean(c))
+    .map(async (c) => ({
+      title: c.data.title,
+      href: categoryHref(c),
+      description: c.data.meta_description,
+      icon: c.data.icon,
+      count: await categoryToolCount(c.id),
+    }))
+);
 
-// Featured tools: featured if provided, else first few published tools.
+// Featured tools.
 const publishedTools = await getCollection('tools', ({ data }) => !data.draft);
 let toolEntries = hp?.data.featured_tools?.length
   ? (await Promise.all(hp.data.featured_tools.map((r) => getEntry(r)))).filter(Boolean)
-  : publishedTools.slice(0, 6);
+  : publishedTools.slice(0, 8);
 const toolCards = toolEntries
   .filter((t): t is NonNullable<typeof t> => Boolean(t))
   .map((t) => ({ title: t.data.title, href: toolHref(t), summary: t.data.hero_subcopy }));
 
 // Latest blog posts.
 const publishedPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) =>
-    (b.data.published_date?.valueOf() ?? 0) - (a.data.published_date?.valueOf() ?? 0)
+  (a, b) => (b.data.published_date?.valueOf() ?? 0) - (a.data.published_date?.valueOf() ?? 0)
 );
 const latestPosts = publishedPosts.slice(0, 3).map((p) => ({
   title: p.data.title,
@@ -57,6 +58,12 @@ const latestPosts = publishedPosts.slice(0, 3).map((p) => ({
 
 const seoTitle = hp?.data.seo_title ?? 'CalcFree — practical calculators and tools';
 const seoDesc = hp?.data.meta_description;
+
+const steps = [
+  { icon: 'calculator', heading: 'Enter your details', text: 'Type your figures into a clear, labelled form. Nothing is sent anywhere — it runs in your browser.' },
+  { icon: 'source', heading: 'See the assumptions', text: 'Every tool states what it assumes and links the official source, so you know what the number is based on.' },
+  { icon: 'check', heading: 'Get a clear result', text: 'A plain-English result with the breakdown — and an honest note on where to get advice for big decisions.' },
+];
 ---
 
 <BaseLayout title={seoTitle} description={seoDesc}>
@@ -64,24 +71,30 @@ const seoDesc = hp?.data.meta_description;
     heading={hp?.data.hero_heading ?? 'Calculators that show their working'}
     subcopy={hp?.data.hero_subcopy}
     ctaText={hp?.data.hero_cta_text ?? 'Browse tools'}
-    ctaHref="#tools"
+    ctaHref="/tools/"
+    secondaryText="Read the guides"
+    secondaryHref="/blog/"
   />
 
   {hp?.data.value_proposition && (
-    <section class="section" style="padding-top:0;">
-      <div class="container container-narrow">
-        <p class="lead">{hp.data.value_proposition}</p>
+    <section class="section" style="padding-block: var(--sp-7);">
+      <div class="container container-narrow" style="text-align:center;">
+        <p class="lead" style="margin-inline:auto;">{hp.data.value_proposition}</p>
       </div>
     </section>
   )}
 
   {categoryCards.length > 0 && (
-    <section class="section" id="categories">
+    <section class="section section-tint" id="categories">
       <div class="container">
-        <h2>Browse by category</h2>
-        <div class="grid grid-3" style="margin-top: var(--sp-5);">
+        <div class="section-head">
+          <span class="eyebrow">Browse</span>
+          <h2>Explore by category</h2>
+          <p class="lead">Pick a category to see every calculator in it. We add new tools regularly.</p>
+        </div>
+        <div class="grid grid-3">
           {categoryCards.map((c) => (
-            <CategoryCard title={c.title} href={c.href} description={c.description} icon={c.icon} />
+            <CategoryCard title={c.title} href={c.href} description={c.description} icon={c.icon} count={c.count} />
           ))}
         </div>
       </div>
@@ -89,27 +102,55 @@ const seoDesc = hp?.data.meta_description;
   )}
 
   {toolCards.length > 0 && (
-    <FeaturedTools id="tools" heading="Popular tools" tools={toolCards} />
+    <FeaturedTools
+      id="tools"
+      heading="Popular calculators"
+      intro="The tools people reach for most — each one shows its working and cites its source."
+      tools={toolCards}
+    />
   )}
+
+  <!-- How it works -->
+  <section class="section section-tint">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Clear answers in three steps</h2>
+      </div>
+      <div class="grid grid-3">
+        {steps.map((s, i) => (
+          <div class="trust-item">
+            <span class="trust-icon"><Icon name={s.icon} size={22} /></span>
+            <h3>{i + 1}. {s.heading}</h3>
+            <p class="muted">{s.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <TrustSection points={hp?.data.trust_points ?? []} />
 
   {(hp?.data.methodology_section || hp?.data.editorial_section) && (
-    <section class="section">
+    <section class="section section-dark">
       <div class="container">
+        <div class="section-head">
+          <span class="eyebrow" style="color: var(--accent-soft);">Standards</span>
+          <h2>Built to be trusted, not just used</h2>
+        </div>
         <div class="grid grid-2">
           {hp?.data.methodology_section && (
-            <div class="card">
+            <div class="dark-card">
               <h3>{hp.data.methodology_section.heading}</h3>
               <p>{hp.data.methodology_section.text}</p>
-              <p><a href={hp.data.methodology_section.link_href}>{hp.data.methodology_section.link_text}</a></p>
+              <p><a href={hp.data.methodology_section.link_href}>{hp.data.methodology_section.link_text} →</a></p>
             </div>
           )}
           {hp?.data.editorial_section && (
-            <div class="card">
+            <div class="dark-card">
               <h3>{hp.data.editorial_section.heading}</h3>
               <p>{hp.data.editorial_section.text}</p>
-              <p><a href={hp.data.editorial_section.link_href}>{hp.data.editorial_section.link_text}</a></p>
+              <p><a href={hp.data.editorial_section.link_href}>{hp.data.editorial_section.link_text} →</a></p>
             </div>
           )}
         </div>
@@ -118,6 +159,19 @@ const seoDesc = hp?.data.meta_description;
   )}
 
   {latestPosts.length > 0 && (
-    <RelatedBlogs heading="From the blog" posts={latestPosts} />
+    <RelatedBlogs heading="Latest from the blog" posts={latestPosts} />
   )}
 </BaseLayout>
+
+<style>
+  .dark-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-5);
+  }
+  .dark-card h3 { color: #fff; margin-top: 0; }
+  .dark-card p { color: var(--ink-on-dark); }
+  .dark-card a { color: var(--accent-soft); text-decoration: none; font-weight: 600; }
+  .dark-card a:hover { color: #fff; }
+</style>

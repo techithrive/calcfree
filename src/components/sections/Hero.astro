@@ -1,8 +1,11 @@
 ---
 /**
- * Hero — text-and-CTA hero. Deliberately text/SVG only (no large hero image)
- * so the Largest Contentful Paint stays fast. Used on the homepage.
+ * Hero — two-column on desktop: headline + CTAs left, a purposeful
+ * "result preview" card right (shows what the product does, not generic art).
+ * Single-column on mobile; visual hidden on small screens for speed.
  */
+import Icon from '../ui/Icon.astro';
+
 interface Props {
   heading: string;
   subcopy?: string;
@@ -10,6 +13,7 @@ interface Props {
   ctaHref?: string;
   secondaryText?: string;
   secondaryHref?: string;
+  trustNote?: string;
 }
 
 const {
@@ -19,20 +23,76 @@ const {
   ctaHref = '#tools',
   secondaryText,
   secondaryHref,
+  trustNote = 'Free to use · calculations run in your browser · sources you can check',
 } = Astro.props;
 ---
 
 <section class="hero">
-  <div class="container">
-    <h1>{heading}</h1>
-    {subcopy && <p class="lead">{subcopy}</p>}
-    {(ctaText || secondaryText) && (
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Calculators &amp; tools</span>
+      <h1>{heading}</h1>
+      {subcopy && <p class="lead">{subcopy}</p>}
       <div class="actions">
-        {ctaText && <a class="btn btn-primary" href={ctaHref}>{ctaText}</a>}
+        {ctaText && <a class="btn btn-primary btn-lg btn-arrow" href={ctaHref}>{ctaText}</a>}
         {secondaryText && secondaryHref && (
-          <a class="btn btn-secondary" href={secondaryHref}>{secondaryText}</a>
+          <a class="btn btn-secondary btn-lg" href={secondaryHref}>{secondaryText}</a>
         )}
       </div>
-    )}
+      <p class="hero-note"><Icon name="lock" size={16} /> {trustNote}</p>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="preview-card">
+        <div class="preview-head">
+          <span class="preview-dot"></span>
+          <span class="preview-title">Example calculation</span>
+        </div>
+        <div class="preview-rows">
+          <div class="preview-row"><span>Gross earnings</span><span>£32,000</span></div>
+          <div class="preview-row"><span>Allowable expenses</span><span>£3,000</span></div>
+          <div class="preview-row"><span>Tax &amp; NI due</span><span>£4,272</span></div>
+          <div class="preview-row preview-emph"><span>Estimated refund</span><span>£1,728</span></div>
+        </div>
+        <div class="preview-foot"><Icon name="source" size={14} /> Assumptions shown · source linked</div>
+      </div>
+    </div>
   </div>
 </section>
+
+<style>
+  .preview-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-raised);
+    padding: var(--sp-5);
+    max-width: 420px;
+    margin-left: auto;
+  }
+  .preview-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: var(--sp-3);
+  }
+  .preview-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .preview-title { font-weight: 700; font-size: 0.9rem; color: var(--ink-soft); }
+  .preview-row {
+    display: flex; justify-content: space-between;
+    padding: 0.55rem 0; font-size: 0.95rem; color: var(--ink-soft);
+    border-bottom: 1px dashed var(--line);
+  }
+  .preview-row span:last-child { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }
+  .preview-emph {
+    border-bottom: 0; margin-top: 0.35rem; padding-top: 0.7rem;
+    border-top: 2px solid var(--accent-tint-2); font-size: 1.05rem;
+  }
+  .preview-emph span { color: var(--accent-ink) !important; font-weight: 700; }
+  .preview-foot {
+    margin-top: var(--sp-3); display: flex; align-items: center; gap: 0.4rem;
+    font-size: var(--fs-200); color: var(--ink-muted);
+  }
+</style>

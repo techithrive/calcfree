@@ -11,9 +11,12 @@ export default defineConfig({
   output: 'static',
   integrations: [
     sitemap({
-      // Keep legal/utility pages in the sitemap; exclude the CMS admin and 404.
+      // Keep legal/utility pages in the sitemap; exclude the CMS admin, 404
+      // and the noindex search page.
       filter: (page) =>
-        !page.includes('/admin') && !page.endsWith('/404/'),
+        !page.includes('/admin') &&
+        !page.endsWith('/404/') &&
+        !page.includes('/search'),
       changefreq: 'weekly',
       lastmod: new Date(),
     }),

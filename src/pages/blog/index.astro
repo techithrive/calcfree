@@ -6,7 +6,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/layout/Breadcrumbs.astro';
 import BlogCard from '../../components/cards/BlogCard.astro';
 import SchemaBreadcrumb from '../../components/seo/SchemaBreadcrumb.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import { blogHref } from '../../lib/internal-links';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
@@ -14,12 +14,18 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
     (b.data.published_date?.valueOf() ?? 0) - (a.data.published_date?.valueOf() ?? 0)
 );
 
-const cards = posts.map((p) => ({
-  title: p.data.title,
-  href: blogHref(p),
-  excerpt: p.data.excerpt,
-  date: p.data.published_date,
-}));
+const cards = await Promise.all(
+  posts.map(async (p) => {
+    const cat = p.data.category ? await getEntry(p.data.category) : undefined;
+    return {
+      title: p.data.title,
+      href: blogHref(p),
+      excerpt: p.data.excerpt,
+      date: p.data.published_date,
+      category: cat?.data.title,
+    };
+  })
+);
 
 const crumbs = [{ label: 'Home', href: '/' }, { label: 'Blog' }];
 ---
@@ -41,7 +47,7 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Blog' }];
       {cards.length > 0 ? (
         <div class="grid grid-3" style="margin-top: var(--sp-6);">
           {cards.map((p) => (
-            <BlogCard title={p.title} href={p.href} excerpt={p.excerpt} date={p.date} />
+            <BlogCard title={p.title} href={p.href} excerpt={p.excerpt} date={p.date} category={p.category} />
           ))}
         </div>
       ) : (

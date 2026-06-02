@@ -15,6 +15,7 @@ import SchemaFaq from '../../components/seo/SchemaFaq.astro';
 import SchemaBreadcrumb from '../../components/seo/SchemaBreadcrumb.astro';
 import { toolHref, categoryHref, resolveToolRefs, resolveBlogRefs } from '../../lib/internal-links';
 import { absoluteUrl } from '../../lib/schema';
+import entities from '../../data/entities.json';
 
 export const getStaticPaths = (async () => {
   const tools = await getCollection('tools', ({ data }) => !data.draft);
@@ -55,6 +56,13 @@ const authorObj = author
   ? { name: author.data.name, href: authorHref, role: author.data.role }
   : undefined;
 
+// Entity "about" terms for this tool's category, from the entity map. Makes the
+// inert map live: tells search/AI engines which real-world concepts the tool covers.
+const catEntities = category ? (entities.categories as Record<string, any>)[category.id] : undefined;
+const aboutEntities: { name: string; url?: string }[] = catEntities
+  ? [...(catEntities.primary ?? []), ...(catEntities.secondary ?? [])].slice(0, 6)
+  : [];
+
 // Map currency-ish units to a sensible default prefix.
 const prefixFor = (input: (typeof tool.data.inputs)[number]) =>
   input.type === 'currency' ? input.unit || '£' : undefined;
@@ -87,12 +95,13 @@ const suffixFor = (input: (typeof tool.data.inputs)[number]) =>
       authorName={author?.data.name}
       authorUrl={authorHref}
       dateModified={tool.data.last_reviewed.toISOString().split('T')[0]}
+      about={aboutEntities}
     />
     <SchemaFaq faqs={faqs} enabled={tool.data.enable_faq_schema} />
     <SchemaBreadcrumb items={crumbs} />
   </Fragment>
 
-  {/* Static calculator form. Batch 5 wires the compute logic via data-calc. */}
+  {/* Static calculator form. Logic is wired client-side via data-calc. */}
   <form
     slot="calculator"
     class="calc"
@@ -100,49 +109,26 @@ const suffixFor = (input: (typeof tool.data.inputs)[number]) =>
     novalidate
   >
     <div class="calc-grid">
-      {tool.data.inputs.map((input) => (
+      {tool.data.inputs.filter((i) => !i.advanced).map((input) => (
         <div class={`field ${input.type === 'toggle' ? 'field-wide' : ''}`}>
-          <label for={input.field_id}>{input.label}</label>
+          <label for={input.field_id}>{input.label}{input.optional && <span class="field-opt"> (optional)</span>}</label>
           {input.help_text && <span class="help">{input.help_text}</span>}
 
           {input.type === 'select' ? (
-            <select
-              class="input"
-              id={input.field_id}
-              name={input.field_id}
-              data-field={input.field_id}
-              data-type={input.type}
-            >
-              {(input.options ?? []).map((opt) => (
-                <option value={opt.value}>{opt.label}</option>
-              ))}
+            <select class="input" id={input.field_id} name={input.field_id} data-field={input.field_id} data-type={input.type}>
+              {(input.options ?? []).map((opt) => (<option value={opt.value}>{opt.label}</option>))}
             </select>
           ) : input.type === 'toggle' ? (
             <label class="toggle">
-              <input
-                type="checkbox"
-                id={input.field_id}
-                name={input.field_id}
-                data-field={input.field_id}
-                data-type={input.type}
-              />
+              <input type="checkbox" id={input.field_id} name={input.field_id} data-field={input.field_id} data-type={input.type} />
               <span>{input.unit ?? 'Yes'}</span>
             </label>
           ) : (
             <span class="input-group">
               {prefixFor(input) && <span class="prefix">{prefixFor(input)}</span>}
-              <input
-                class="input"
-                id={input.field_id}
-                name={input.field_id}
-                type="text"
-                inputmode="decimal"
+              <input class="input" id={input.field_id} name={input.field_id} type="text" inputmode="decimal"
                 placeholder={input.default !== undefined ? String(input.default) : ''}
-                data-field={input.field_id}
-                data-type={input.type}
-                data-min={input.min}
-                data-max={input.max}
-              />
+                data-field={input.field_id} data-type={input.type} data-min={input.min} data-max={input.max} />
               {suffixFor(input) && <span class="suffix">{suffixFor(input)}</span>}
             </span>
           )}
@@ -150,8 +136,40 @@ const suffixFor = (input: (typeof tool.data.inputs)[number]) =>
       ))}
     </div>
 
+    {tool.data.inputs.some((i) => i.advanced) && (
+      <details class="calc-advanced">
+        <summary>Advanced settings</summary>
+        <div class="calc-grid" style="margin-top: var(--sp-4);">
+          {tool.data.inputs.filter((i) => i.advanced).map((input) => (
+            <div class={`field ${input.type === 'toggle' ? 'field-wide' : ''}`}>
+              <label for={input.field_id}>{input.label}{input.optional && <span class="field-opt"> (optional)</span>}</label>
+              {input.help_text && <span class="help">{input.help_text}</span>}
+              {input.type === 'select' ? (
+                <select class="input" id={input.field_id} name={input.field_id} data-field={input.field_id} data-type={input.type}>
+                  {(input.options ?? []).map((opt) => (<option value={opt.value}>{opt.label}</option>))}
+                </select>
+              ) : input.type === 'toggle' ? (
+                <label class="toggle">
+                  <input type="checkbox" id={input.field_id} name={input.field_id} data-field={input.field_id} data-type={input.type} />
+                  <span>{input.unit ?? 'Yes'}</span>
+                </label>
+              ) : (
+                <span class="input-group">
+                  {prefixFor(input) && <span class="prefix">{prefixFor(input)}</span>}
+                  <input class="input" id={input.field_id} name={input.field_id} type="text" inputmode="decimal"
+                    placeholder={input.default !== undefined ? String(input.default) : ''}
+                    data-field={input.field_id} data-type={input.type} data-min={input.min} data-max={input.max} />
+                  {suffixFor(input) && <span class="suffix">{suffixFor(input)}</span>}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </details>
+    )}
+
     <div class="calc-actions" style="margin-top: var(--sp-5);">
-      <button type="button" class="btn btn-primary" data-calc-run>Calculate</button>
+      <button type="button" class="btn btn-primary btn-lg" data-calc-run>Calculate</button>
     </div>
 
     <div class="result" data-calc-result hidden>

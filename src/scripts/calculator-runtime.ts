@@ -48,6 +48,9 @@ function run(form: HTMLFormElement): void {
   if (output.headline) {
     html += `<p class="result-headline">${escapeHtml(output.headline)}</p>`;
   }
+  if (output.interpretation) {
+    html += `<p class="result-interpretation">${escapeHtml(output.interpretation)}</p>`;
+  }
   if (output.rows.length) {
     html +=
       '<table class="result-table"><tbody>' +

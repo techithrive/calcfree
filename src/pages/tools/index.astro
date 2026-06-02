@@ -1,0 +1,59 @@
+---
+/**
+ * /tools/ — the master tool directory, grouped by active category. Scales to
+ * 100+ tools because it's data-driven and grouped; no anchor-only navigation.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/layout/Breadcrumbs.astro';
+import ToolCard from '../../components/cards/ToolCard.astro';
+import SchemaBreadcrumb from '../../components/seo/SchemaBreadcrumb.astro';
+import { getCollection } from 'astro:content';
+import { toolHref, categoryHref, activeCategories } from '../../lib/internal-links';
+
+const cats = await activeCategories(1);
+const allTools = await getCollection('tools', ({ data }) => !data.draft);
+
+const groups = cats.map((c) => ({
+  title: c.data.title,
+  href: categoryHref(c),
+  icon: c.data.icon,
+  tools: allTools
+    .filter((t) => t.data.category?.id === c.id)
+    .map((t) => ({ title: t.data.title, href: toolHref(t), summary: t.data.hero_subcopy })),
+}));
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'All tools' }];
+const total = allTools.length;
+---
+
+<BaseLayout
+  title="All calculators & tools | CalcFree"
+  description="Browse every CalcFree calculator, grouped by category — tax, contractor, home-project and more. Each tool shows its working and cites its source."
+>
+  <SchemaBreadcrumb slot="head" items={crumbs} />
+  <Breadcrumbs items={crumbs} />
+
+  <div class="tool-hero">
+    <div class="container">
+      <span class="eyebrow">Directory</span>
+      <h1>All calculators &amp; tools</h1>
+      <p class="lead">{total} free tools and counting — each one shows its working, states its assumptions, and links the official source.</p>
+    </div>
+  </div>
+
+  {groups.map((g) => (
+    <section class="section" style="padding-block: var(--sp-6);">
+      <div class="container">
+        <div class="section-head" style="margin-bottom: var(--sp-4); display:flex; align-items:baseline; justify-content:space-between; gap: var(--sp-4);">
+          <h2 style="margin:0;">{g.title}</h2>
+          <a class="btn-ghost" href={g.href}>View category →</a>
+        </div>
+        <div class="grid grid-4">
+          {g.tools.map((t) => (
+            <ToolCard title={t.title} href={t.href} summary={t.summary} icon={g.icon} />
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+</BaseLayout>

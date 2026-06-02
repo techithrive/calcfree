@@ -1,14 +1,12 @@
 ---
 /**
- * Site header: logo + primary navigation.
- *
- * Navigation is a single <details> disclosure. On desktop the menu is always
- * shown (the summary is hidden); on mobile it toggles open/closed using the
- * browser's native <details> behaviour — so it works with JavaScript disabled.
- * Every item is a real, crawlable <a>.
+ * Site header: logo + primary navigation + search + a prominent "Browse tools"
+ * CTA. Navigation is a native <details> disclosure so it works without JS.
  */
+import Icon from '../ui/Icon.astro';
+
 const nav = [
-  { label: 'Tools', href: '/#tools' },
+  { label: 'All tools', href: '/tools/' },
   { label: 'Categories', href: '/#categories' },
   { label: 'Blog', href: '/blog/' },
   { label: 'About', href: '/about/' },
@@ -19,8 +17,7 @@ const nav = [
 <header class="site-header">
   <div class="container bar">
     <a class="brand" href="/" aria-label="CalcFree home">
-      <img src="/logo.svg" alt="" width="160" height="32" />
-      <span class="visually-hidden">CalcFree</span>
+      <img src="/logo.svg" alt="CalcFree" width="150" height="30" />
     </a>
 
     <details class="nav">
@@ -33,92 +30,71 @@ const nav = [
           {nav.map((item) => (
             <li><a href={item.href}>{item.label}</a></li>
           ))}
+          <li><a href="/search/" aria-label="Search"><Icon name="search" size={18} /> <span class="nav-search-label">Search</span></a></li>
+          <li class="nav-cta-mobile"><a class="btn btn-primary btn-block" href="/tools/">Browse tools</a></li>
         </ul>
       </nav>
     </details>
+
+    <div class="nav-actions">
+      <a class="nav-search-btn" href="/search/" aria-label="Search"><Icon name="search" size={20} /></a>
+      <a class="btn btn-primary nav-cta" href="/tools/">Browse tools</a>
+    </div>
   </div>
 </header>
 
 <style>
-  .nav {
-    position: relative;
-  }
+  .site-header .bar { gap: var(--sp-5); }
+  .nav { position: relative; }
   .nav-summary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    list-style: none;
-    cursor: pointer;
-    font-weight: 600;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-sm);
-    padding: 0.5rem 0.8rem;
-    user-select: none;
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    list-style: none; cursor: pointer; font-weight: 600;
+    border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    padding: 0.5rem 0.8rem; user-select: none;
   }
-  .nav-summary::-webkit-details-marker {
-    display: none;
-  }
-  .nav-summary-icon {
-    width: 16px;
-    height: 2px;
-    background: var(--ink);
-    position: relative;
-  }
-  .nav-summary-icon::before,
-  .nav-summary-icon::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    width: 16px;
-    height: 2px;
-    background: var(--ink);
+  .nav-summary::-webkit-details-marker { display: none; }
+  .nav-summary-icon { width: 16px; height: 2px; background: var(--ink); position: relative; }
+  .nav-summary-icon::before, .nav-summary-icon::after {
+    content: ''; position: absolute; left: 0; width: 16px; height: 2px; background: var(--ink);
   }
   .nav-summary-icon::before { top: -5px; }
   .nav-summary-icon::after { top: 5px; }
 
-  .nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .nav-list { list-style: none; margin: 0; padding: 0; }
+  .nav-list a { color: var(--ink-soft); text-decoration: none; font-weight: 500; display: block; }
+  .nav-list a:hover { color: var(--accent-strong); }
+  .nav-cta-mobile { display: block; margin-top: var(--sp-2); }
+  .nav-cta { display: none; }
+  .nav-actions { display: flex; align-items: center; gap: var(--sp-3); }
+  .nav-search-btn {
+    display: none;
+    align-items: center; justify-content: center;
+    width: 42px; height: 42px; border-radius: var(--radius-sm);
+    border: 1px solid var(--line-strong); color: var(--ink-soft);
   }
-  .nav-list a {
-    color: var(--ink-soft);
-    text-decoration: none;
-    font-weight: 500;
-    display: block;
-  }
-  .nav-list a:hover {
-    color: var(--accent-strong);
-  }
+  .nav-search-btn:hover { border-color: var(--ink-muted); color: var(--accent-strong); }
+  .nav-search-label { display: inline; }
 
-  /* Mobile: native disclosure. Closed = hidden, open = dropdown panel. */
-  @media (max-width: 819px) {
+  /* Mobile: native disclosure dropdown */
+  @media (max-width: 859px) {
     .nav[open] .nav-list {
-      position: absolute;
-      right: 0;
-      top: calc(100% + 8px);
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: var(--sp-4);
-      min-width: 200px;
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-      z-index: 60;
+      position: absolute; right: 0; top: calc(100% + 10px);
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: var(--sp-4); min-width: 230px; display: flex; flex-direction: column;
+      gap: var(--sp-3); z-index: 60;
     }
+    .nav-list a { display: flex; align-items: center; gap: 0.5rem; }
   }
 
-  /* Desktop: menu always visible, toggle hidden. Works without JS. */
-  @media (min-width: 820px) {
-    .nav-summary {
-      display: none;
-    }
-    .nav-list {
-      display: flex;
-      gap: var(--sp-5);
-      align-items: center;
-    }
+  /* Desktop: inline nav, hide toggle, show CTA + search button */
+  @media (min-width: 860px) {
+    .nav-summary { display: none; }
+    .nav-list { display: flex; gap: var(--sp-5); align-items: center; }
+    .nav-list a { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .nav-search-label { display: none; }
+    .nav-cta-mobile { display: none; }
+    .nav-cta { display: inline-flex; }
+    .nav-search-btn { display: inline-flex; }
   }
 </style>

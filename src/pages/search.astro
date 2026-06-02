@@ -1,0 +1,140 @@
+---
+/**
+ * /search/ — client-side search over /search-index.json. The page is crawlable
+ * and the index is just data, so this adds no SEO risk. Works as a normal page;
+ * results render once the index loads. No external dependencies.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: 'Search' }];
+---
+
+<BaseLayout
+  title="Search | CalcFree"
+  description="Search CalcFree calculators, guides and categories."
+  noindex={true}
+>
+  <Breadcrumbs items={crumbs} />
+
+  <div class="tool-hero">
+    <div class="container container-narrow">
+      <span class="eyebrow">Search</span>
+      <h1>Find a calculator or guide</h1>
+      <form class="search-form" role="search" id="search-form">
+        <label class="visually-hidden" for="q">Search CalcFree</label>
+        <input
+          class="input"
+          type="search"
+          id="q"
+          name="q"
+          placeholder="Try “CIS refund”, “IR35”, “fence cost”…"
+          autocomplete="off"
+        />
+      </form>
+    </div>
+  </div>
+
+  <section class="section" style="padding-top: var(--sp-6);">
+    <div class="container container-narrow">
+      <p id="search-status" class="muted">Loading search…</p>
+      <ul id="search-results" class="search-results"></ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .search-form { margin-top: var(--sp-4); }
+  .search-form .input { font-size: var(--fs-500); padding: 0.9rem 1rem; }
+  .search-results { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--sp-3); }
+  .search-results li { margin: 0; }
+  .search-results a {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: var(--sp-4);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .search-results a:hover { border-color: var(--accent-tint-2); box-shadow: var(--shadow-sm); }
+  .search-results .r-type {
+    font-size: var(--fs-200); font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--accent-strong);
+  }
+  .search-results .r-title { font-weight: 600; margin: 0.15rem 0; }
+  .search-results .r-sum { color: var(--ink-soft); font-size: 0.92rem; margin: 0; }
+</style>
+
+<script>
+  type Item = { type: string; title: string; summary: string; keywords: string; url: string };
+  const input = document.getElementById('q') as HTMLInputElement | null;
+  const status = document.getElementById('search-status');
+  const list = document.getElementById('search-results');
+  const form = document.getElementById('search-form');
+  let data: Item[] = [];
+
+  const esc = (s: string) =>
+    s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+
+  function render(items: Item[]) {
+    if (!list || !status) return;
+    if (!input?.value.trim()) {
+      status.textContent = `${data.length} tools and guides. Start typing to filter.`;
+      list.innerHTML = '';
+      return;
+    }
+    if (!items.length) {
+      status.textContent = 'No matches. Try a different word.';
+      list.innerHTML = '';
+      return;
+    }
+    status.textContent = `${items.length} result${items.length === 1 ? '' : 's'}`;
+    list.innerHTML = items
+      .map(
+        (i) =>
+          `<li><a href="${i.url}"><span class="r-type">${esc(i.type)}</span>` +
+          `<p class="r-title">${esc(i.title)}</p>` +
+          (i.summary ? `<p class="r-sum">${esc(i.summary)}</p>` : '') +
+          `</a></li>`
+      )
+      .join('');
+  }
+
+  function search(q: string): Item[] {
+    const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+    return data
+      .map((item) => {
+        const hay = `${item.title} ${item.summary} ${item.keywords} ${item.type}`.toLowerCase();
+        let score = 0;
+        for (const t of terms) {
+          if (item.title.toLowerCase().includes(t)) score += 3;
+          else if (hay.includes(t)) score += 1;
+          else return null;
+        }
+        return { item, score };
+      })
+      .filter((x): x is { item: Item; score: number } => x !== null)
+      .sort((a, b) => b.score - a.score)
+      .map((x) => x.item)
+      .slice(0, 30);
+  }
+
+  function update() {
+    render(input?.value.trim() ? search(input.value) : []);
+  }
+
+  fetch('/search-index.json')
+    .then((r) => r.json())
+    .then((json: Item[]) => {
+      data = json;
+      update();
+      input?.addEventListener('input', update);
+      // Prefill from ?q=
+      const params = new URLSearchParams(location.search);
+      const q = params.get('q');
+      if (q && input) { input.value = q; update(); }
+    })
+    .catch(() => {
+      if (status) status.textContent = 'Search is unavailable right now. Use the menu to browse.';
+    });
+
+  form?.addEventListener('submit', (e) => e.preventDefault());
+</script>

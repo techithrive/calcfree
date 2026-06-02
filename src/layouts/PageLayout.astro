@@ -1,0 +1,45 @@
+---
+/**
+ * PageLayout — for static/legal pages (About, Contact, Privacy, Terms,
+ * Disclaimer). Renders a narrow prose column with an optional "last updated"
+ * line. Body comes through the default slot.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+import type { Crumb } from '../components/layout/Breadcrumbs.astro';
+
+interface Props {
+  seo: { title: string; description?: string; canonical?: string; ogImage?: string; noindex?: boolean };
+  breadcrumbs: Crumb[];
+  title: string;
+  lastUpdated?: Date;
+}
+
+const { seo, breadcrumbs, title, lastUpdated } = Astro.props;
+
+const updatedLabel = lastUpdated
+  ? lastUpdated.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
+  : null;
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  canonical={seo.canonical}
+  ogImage={seo.ogImage}
+  noindex={seo.noindex}
+>
+  <slot name="head" slot="head" />
+
+  <Breadcrumbs items={breadcrumbs} />
+
+  <section class="section" style="padding-top: var(--sp-4);">
+    <div class="container container-narrow">
+      <h1>{title}</h1>
+      {updatedLabel && <p class="updated" style="margin-top: var(--sp-2);">Last updated {updatedLabel}.</p>}
+      <div class="prose" style="margin-top: var(--sp-5);">
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

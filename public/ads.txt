@@ -1,0 +1,5 @@
+# CalcFree ads.txt
+# Add your Google AdSense line here AFTER approval, replacing the publisher ID:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# Until approved, this file intentionally contains no authorised sellers.

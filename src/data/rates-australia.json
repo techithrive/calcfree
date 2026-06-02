@@ -1,0 +1,35 @@
+{
+  "_note": "Representative Australian figures for HECS-HELP repayment and novated lease estimates (later batches). VERIFY against the ATO before relying on them; thresholds change each financial year. Amounts in AUD.",
+  "financial_year": "2025-26",
+  "sources": {
+    "hecs": "https://www.ato.gov.au/rates/help,-tsl-and-sfss-repayment-thresholds-and-rates/",
+    "novated": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/fringe-benefits-tax"
+  },
+  "hecs_repayment_bands": [
+    { "income_from": 0, "rate": 0 },
+    { "income_from": 54435, "rate": 1.0 },
+    { "income_from": 62851, "rate": 2.0 },
+    { "income_from": 66621, "rate": 2.5 },
+    { "income_from": 70619, "rate": 3.0 },
+    { "income_from": 74856, "rate": 3.5 },
+    { "income_from": 79347, "rate": 4.0 },
+    { "income_from": 84108, "rate": 4.5 },
+    { "income_from": 89155, "rate": 5.0 },
+    { "income_from": 94504, "rate": 5.5 },
+    { "income_from": 100175, "rate": 6.0 },
+    { "income_from": 106186, "rate": 6.5 },
+    { "income_from": 112557, "rate": 7.0 },
+    { "income_from": 119310, "rate": 7.5 },
+    { "income_from": 126468, "rate": 8.0 },
+    { "income_from": 134057, "rate": 8.5 },
+    { "income_from": 142101, "rate": 9.0 },
+    { "income_from": 150627, "rate": 9.5 },
+    { "income_from": 159664, "rate": 10.0 }
+  ],
+  "hecs_indexation_note": "HELP balances are indexed annually. Recent reforms tie indexation to the lower of CPI or WPI — verify the current rule.",
+  "novated_lease": {
+    "fbt_ev_exemption_note": "Eligible electric vehicles under the luxury car tax threshold may be exempt from FBT — verify eligibility.",
+    "assumed_interest_rate": 8.5,
+    "assumed_residual_pct_by_term": { "1": 65.63, "2": 56.25, "3": 46.88, "4": 37.5, "5": 28.13 }
+  }
+}

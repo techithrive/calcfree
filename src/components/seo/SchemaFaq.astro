@@ -1,0 +1,38 @@
+---
+/**
+ * SchemaFaq — FAQPage JSON-LD. Outputs ONLY when `enabled` is true and there
+ * are visible FAQs. The answers passed in must be the SAME text shown on the
+ * page (the route passes the identical faqs array to both <FaqBlock /> and this
+ * component), so the schema always matches what users see.
+ */
+import { toJsonLd } from '../../lib/schema';
+
+interface Faq {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  faqs?: Faq[];
+  enabled?: boolean;
+}
+
+const { faqs = [], enabled = false } = Astro.props;
+const show = enabled && faqs.length > 0;
+
+const data = show
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    }
+  : null;
+
+const json = data ? toJsonLd(data) : '';
+---
+
+{show && <script type="application/ld+json" is:inline set:html={json}></script>}

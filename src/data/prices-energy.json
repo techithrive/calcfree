@@ -1,0 +1,19 @@
+{
+  "_note": "Representative UK energy/fuel assumptions for the Solar ROI and EV-vs-petrol calculators (later batches). Energy prices move often — these are editable defaults users can override, and must be reviewed regularly.",
+  "last_reviewed": "2026-06",
+  "uk": {
+    "electricity_import_p_per_kwh": 24.67,
+    "seg_export_p_per_kwh": 15,
+    "off_peak_p_per_kwh": 7,
+    "petrol_p_per_litre": 135,
+    "litres_per_gallon": 4.546,
+    "grid_carbon_kg_per_kwh": 0.207
+  },
+  "solar_defaults": {
+    "annual_yield_kwh_per_kwp": 900,
+    "self_consumption_pct": 35,
+    "panel_degradation_pct_per_year": 0.5,
+    "inverter_replacement_cost": 1500,
+    "inverter_replacement_years": [10, 20]
+  }
+}

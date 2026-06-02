@@ -1,0 +1,105 @@
+---
+/**
+ * BlogLayout — scaffold for an article. The route passes metadata + resolved
+ * relations and renders the markdown body into the default slot.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+import type { Crumb } from '../components/layout/Breadcrumbs.astro';
+import FaqBlock from '../components/sections/FaqBlock.astro';
+import KeyTakeaways from '../components/sections/KeyTakeaways.astro';
+import RelatedTools from '../components/sections/RelatedTools.astro';
+import RelatedBlogs from '../components/sections/RelatedBlogs.astro';
+import AdSlot from '../components/ads/AdSlot.astro';
+import type { ToolCardData } from '../components/sections/FeaturedTools.astro';
+import type { BlogCardData } from '../components/sections/RelatedBlogs.astro';
+
+interface Props {
+  seo: { title: string; description?: string; canonical?: string; ogImage?: string; noindex?: boolean };
+  breadcrumbs: Crumb[];
+  title: string;
+  author?: { name: string; href: string; role?: string };
+  publishedDate?: Date;
+  updatedDate?: Date;
+  quickAnswer?: string;
+  keyTakeaways?: string[];
+  faqs?: { question: string; answer: string }[];
+  relatedTools?: ToolCardData[];
+  relatedBlogs?: BlogCardData[];
+}
+
+const {
+  seo,
+  breadcrumbs,
+  title,
+  author,
+  publishedDate,
+  updatedDate,
+  quickAnswer,
+  keyTakeaways = [],
+  faqs = [],
+  relatedTools = [],
+  relatedBlogs = [],
+} = Astro.props;
+
+const fmt = (d?: Date) =>
+  d ? d.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }) : null;
+const published = fmt(publishedDate);
+const updated = fmt(updatedDate);
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  canonical={seo.canonical}
+  ogImage={seo.ogImage}
+  ogType="article"
+  noindex={seo.noindex}
+>
+  <slot name="head" slot="head" />
+
+  <Breadcrumbs items={breadcrumbs} />
+
+  <article class="section" style="padding-top: var(--sp-4);">
+    <div class="container container-narrow">
+      <h1>{title}</h1>
+      <p class="updated" style="margin-top: var(--sp-3);">
+        {author && <>By <a href={author.href}>{author.name}</a>. </>}
+        {published && <>Published {published}. </>}
+        {updated && updated !== published && <>Updated {updated}.</>}
+      </p>
+
+      <slot name="hero-image" />
+
+      {quickAnswer && (
+        <div class="callout" style="margin-top: var(--sp-4);">
+          <strong>In short:</strong> {quickAnswer}
+        </div>
+      )}
+
+      <KeyTakeaways points={keyTakeaways} />
+
+      <AdSlot size="leaderboard" />
+
+      <div class="prose" style="margin-top: var(--sp-5);">
+        <slot />
+      </div>
+    </div>
+  </article>
+
+  <FaqBlock faqs={faqs} />
+
+  <RelatedTools heading="Tools mentioned" tools={relatedTools} />
+  <RelatedBlogs posts={relatedBlogs} />
+
+  {author && (
+    <section class="section" style="padding-top:0;">
+      <div class="container container-narrow">
+        <div class="card">
+          <p style="margin:0;"><strong>{author.name}</strong>{author.role ? ` — ${author.role}` : ''}</p>
+          <p style="margin-top: var(--sp-2);"><a href={author.href}>More from this author</a></p>
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

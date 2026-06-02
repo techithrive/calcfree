@@ -1,0 +1,41 @@
+{
+  "id": "homepage",
+  "seo_title": "CalcFree — practical calculators for tax, money and home projects",
+  "meta_description": "Free, no-nonsense calculators for UK tax, personal finance, home project costs and more. Clear answers, stated assumptions, sources you can check.",
+  "hero_heading": "Calculators that show their working",
+  "hero_subcopy": "Straightforward tools for tax, money and real-world projects — with the assumptions and sources spelled out, so you can trust the number.",
+  "hero_cta_text": "Browse tools",
+  "value_proposition": "Most online calculators hand you a number with no idea what it assumed or whether the figures are current. CalcFree does the opposite: every tool states its assumptions in plain English, links the official source, shows when it was last reviewed, and says clearly where an estimate ends and professional advice should begin.",
+  "featured_tools": [],
+  "featured_categories": [],
+  "trust_points": [
+    {
+      "icon": "lock",
+      "heading": "Your numbers stay in your browser",
+      "text": "Calculations run on your device. We don't store the figures you type in."
+    },
+    {
+      "icon": "source",
+      "heading": "Assumptions you can check",
+      "text": "Every tool states what it assumes and links the official source — HMRC, CRA, ATO and others."
+    },
+    {
+      "icon": "calendar",
+      "heading": "Kept current",
+      "text": "Rates and thresholds are reviewed each tax year, with a visible last-updated date."
+    }
+  ],
+  "methodology_section": {
+    "heading": "How our calculators are built",
+    "text": "Calculation logic is written and tested separately from the rates it uses, so the maths can be checked independently and figures can be updated each tax year without touching the code. We test typical values and the awkward edges, and we state every assumption on the page.",
+    "link_text": "Read our methodology",
+    "link_href": "/methodology/"
+  },
+  "editorial_section": {
+    "heading": "Editorial standards",
+    "text": "Tools and guidance are written by a named author, reviewed against official sources before publication, and corrected quickly when something's wrong. Advertising keeps the site free but does not influence what our calculators say.",
+    "link_text": "Read our editorial policy",
+    "link_href": "/editorial-policy/"
+  },
+  "featured_blogs": []
+}

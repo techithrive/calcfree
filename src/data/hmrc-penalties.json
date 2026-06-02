@@ -1,0 +1,24 @@
+{
+  "_note": "HMRC Self Assessment late-filing and late-payment penalty rules. VERIFY against HMRC before relying on them; interest rates change with the Bank of England base rate. These are editable so they can be kept current.",
+  "source": "https://www.gov.uk/self-assessment-tax-returns/penalties",
+  "late_filing": {
+    "initial_fixed": 100,
+    "initial_note": "£100 fixed penalty as soon as the return is late, even if no tax is owed.",
+    "daily_after_3_months": 10,
+    "daily_max_days": 90,
+    "daily_note": "£10 per day after 3 months late, up to 90 days (max £900).",
+    "six_month_penalty_pct_of_tax": 5,
+    "six_month_minimum": 300,
+    "twelve_month_penalty_pct_of_tax": 5,
+    "twelve_month_minimum": 300,
+    "later_note": "At 6 and 12 months, the higher of 5% of the tax due or £300 applies at each milestone."
+  },
+  "late_payment": {
+    "thirty_day_pct": 5,
+    "six_month_pct": 5,
+    "twelve_month_pct": 5,
+    "note": "5% of the unpaid tax at 30 days, again at 6 months, and again at 12 months late.",
+    "interest_annual_pct": 8.5,
+    "interest_note": "Interest also accrues on late tax (roughly Bank of England base rate plus 2.5%). VERIFY the current rate."
+  }
+}

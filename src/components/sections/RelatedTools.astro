@@ -1,0 +1,29 @@
+---
+/**
+ * RelatedTools — shown at the foot of tool and blog pages. Reuses ToolCard.
+ * Renders nothing if no tools are passed (keeps pages clean, avoids empty
+ * headings). Internal linking here is what keeps tools out of orphan status.
+ */
+import ToolCard from '../cards/ToolCard.astro';
+import type { ToolCardData } from './FeaturedTools.astro';
+
+interface Props {
+  heading?: string;
+  tools: ToolCardData[];
+}
+
+const { heading = 'Related tools', tools } = Astro.props;
+---
+
+{tools && tools.length > 0 && (
+  <section class="section">
+    <div class="container">
+      <h2>{heading}</h2>
+      <div class="grid grid-3" style="margin-top: var(--sp-4);">
+        {tools.map((t) => (
+          <ToolCard title={t.title} href={t.href} summary={t.summary} tag={t.tag} />
+        ))}
+      </div>
+    </div>
+  </section>
+)}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="CalcFree">
+  <rect width="48" height="48" rx="11" fill="#16161f" />
+  <g fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 11 H12 V37 H19" />
+    <path d="M29 11 H36 V37 H29" />
+  </g>
+  <g fill="#2dd4bf">
+    <rect x="19.5" y="20.3" width="9" height="3.2" rx="1.6" />
+    <rect x="19.5" y="26.5" width="9" height="3.2" rx="1.6" />
+  </g>
+</svg>

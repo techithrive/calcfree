@@ -1,0 +1,103 @@
+---
+/**
+ * CategoryLayout — scaffold for a category page. Lists every tool in the
+ * category as static links (no orphans), shows related blogs and links to
+ * sibling categories for cross-linking.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/layout/Breadcrumbs.astro';
+import type { Crumb } from '../components/layout/Breadcrumbs.astro';
+import ToolCard from '../components/cards/ToolCard.astro';
+import RelatedBlogs from '../components/sections/RelatedBlogs.astro';
+import type { ToolCardData } from '../components/sections/FeaturedTools.astro';
+import type { BlogCardData } from '../components/sections/RelatedBlogs.astro';
+
+interface SiblingCategory {
+  title: string;
+  href: string;
+}
+
+interface Props {
+  seo: { title: string; description?: string; canonical?: string; ogImage?: string; noindex?: boolean };
+  breadcrumbs: Crumb[];
+  title: string;
+  tools: ToolCardData[];
+  relatedBlogs?: BlogCardData[];
+  siblingCategories?: SiblingCategory[];
+}
+
+const {
+  seo,
+  breadcrumbs,
+  title,
+  tools,
+  relatedBlogs = [],
+  siblingCategories = [],
+} = Astro.props;
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  canonical={seo.canonical}
+  ogImage={seo.ogImage}
+  noindex={seo.noindex}
+>
+  <slot name="head" slot="head" />
+
+  <Breadcrumbs items={breadcrumbs} />
+
+  <section class="section" style="padding-top: var(--sp-4);">
+    <div class="container">
+      <h1>{title}</h1>
+      {/* Unique intro copy (markdown) supplied by the route */}
+      <div class="prose" style="margin-top: var(--sp-3);">
+        <slot name="intro" />
+      </div>
+
+      <div class="grid grid-3" style="margin-top: var(--sp-6);">
+        {tools.map((t) => (
+          <ToolCard title={t.title} href={t.href} summary={t.summary} tag={t.tag} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <RelatedBlogs heading="From the blog" posts={relatedBlogs} />
+
+  {siblingCategories.length > 0 && (
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <h2>Other categories</h2>
+        <ul class="sibling-cats">
+          {siblingCategories.map((c) => (
+            <li><a href={c.href}>{c.title}</a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .sibling-cats {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+  .sibling-cats a {
+    display: inline-block;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  .sibling-cats a:hover {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+</style>

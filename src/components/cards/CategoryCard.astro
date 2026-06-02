@@ -1,0 +1,49 @@
+---
+/**
+ * CategoryCard — used in the homepage category grid and cross-links.
+ * `icon` is a short token (e.g. "tax", "home", "business"); we render a small
+ * inline SVG glyph for the known tokens and fall back to a neutral mark.
+ */
+interface Props {
+  title: string;
+  href: string;
+  description?: string;
+  icon?: string;
+}
+
+const { title, href, description, icon } = Astro.props;
+---
+
+<a class="card card-link cat" href={href}>
+  <span class="cat-icon" aria-hidden="true" data-icon={icon}></span>
+  <h3>{title}</h3>
+  {description && <p>{description}</p>}
+</a>
+
+<style>
+  .cat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .cat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--accent-tint);
+    position: relative;
+    flex: 0 0 auto;
+  }
+  /* Minimal glyph drawn with a mask-free CSS shape so there are no icon images
+     to load. One restrained mark per category, not icon confetti. */
+  .cat-icon::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 2px solid var(--accent);
+    border-radius: 4px;
+  }
+  .cat h3 {
+    margin: 0;
+  }
+</style>

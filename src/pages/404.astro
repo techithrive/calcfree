@@ -1,0 +1,63 @@
+---
+/**
+ * 404 page. Clean and helpful: links back to the homepage, categories and blog.
+ * Marked noindex so it isn't indexed.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { categoryHref } from '../lib/internal-links';
+
+const categories = (await getCollection('categories')).sort(
+  (a, b) => (a.data.order ?? 0) - (b.data.order ?? 0)
+);
+---
+
+<BaseLayout title="Page not found | CalcFree" description="The page you were looking for could not be found." noindex={true}>
+  <section class="section">
+    <div class="container container-narrow" style="text-align:center;">
+      <p class="eyebrow">Error 404</p>
+      <h1>We couldn't find that page</h1>
+      <p class="lead" style="margin-top: var(--sp-3);">
+        The link may be broken or the page may have moved. Here are some good places to start.
+      </p>
+      <div class="actions" style="justify-content:center; margin-top: var(--sp-5); display:flex; gap: var(--sp-3); flex-wrap:wrap;">
+        <a class="btn btn-primary" href="/">Go to homepage</a>
+        <a class="btn btn-secondary" href="/blog/">Read the blog</a>
+      </div>
+
+      {categories.length > 0 && (
+        <div style="margin-top: var(--sp-7);">
+          <h2>Browse categories</h2>
+          <ul class="cat-links">
+            {categories.map((c) => (
+              <li><a href={categoryHref(c)}>{c.data.title}</a></li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cat-links {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    justify-content: center;
+  }
+  .cat-links a {
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  .cat-links a:hover {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+</style>

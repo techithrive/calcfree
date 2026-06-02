@@ -1,0 +1,38 @@
+---
+/**
+ * Hero — text-and-CTA hero. Deliberately text/SVG only (no large hero image)
+ * so the Largest Contentful Paint stays fast. Used on the homepage.
+ */
+interface Props {
+  heading: string;
+  subcopy?: string;
+  ctaText?: string;
+  ctaHref?: string;
+  secondaryText?: string;
+  secondaryHref?: string;
+}
+
+const {
+  heading,
+  subcopy,
+  ctaText,
+  ctaHref = '#tools',
+  secondaryText,
+  secondaryHref,
+} = Astro.props;
+---
+
+<section class="hero">
+  <div class="container">
+    <h1>{heading}</h1>
+    {subcopy && <p class="lead">{subcopy}</p>}
+    {(ctaText || secondaryText) && (
+      <div class="actions">
+        {ctaText && <a class="btn btn-primary" href={ctaHref}>{ctaText}</a>}
+        {secondaryText && secondaryHref && (
+          <a class="btn btn-secondary" href={secondaryHref}>{secondaryText}</a>
+        )}
+      </div>
+    )}
+  </div>
+</section>

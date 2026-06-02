@@ -1,0 +1,35 @@
+---
+/**
+ * SchemaBreadcrumb — BreadcrumbList JSON-LD. Pass the SAME items array used by
+ * the visible <Breadcrumbs /> component so the two never diverge.
+ * The current page (last item, usually without href) resolves to the current URL.
+ */
+import { absoluteUrl, toJsonLd } from '../../lib/schema';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+const currentUrl = absoluteUrl(Astro.url.pathname);
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: item.label,
+    item: item.href ? absoluteUrl(item.href) : currentUrl,
+  })),
+};
+
+const json = toJsonLd(data);
+---
+
+<script type="application/ld+json" is:inline set:html={json}></script>

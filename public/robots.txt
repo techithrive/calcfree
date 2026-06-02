@@ -1,0 +1,8 @@
+# CalcFree — robots.txt
+# Allow crawling of the whole site except the CMS admin area.
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://calcfree.online/sitemap-index.xml

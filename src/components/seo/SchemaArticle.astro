@@ -1,0 +1,60 @@
+---
+/**
+ * SchemaArticle — JSON-LD for a blog post. Uses headline, description, author,
+ * publish/modified dates, image and publisher. Nothing is invented; optional
+ * fields are dropped when absent.
+ */
+import { absoluteUrl, toJsonLd, isoDate } from '../../lib/schema';
+
+interface Props {
+  headline: string;
+  description?: string;
+  url?: string;
+  authorName?: string;
+  authorUrl?: string;
+  datePublished?: Date | string;
+  dateModified?: Date | string;
+  image?: string;
+  publisherName?: string;
+  publisherLogo?: string;
+}
+
+const {
+  headline,
+  description,
+  url,
+  authorName,
+  authorUrl,
+  datePublished,
+  dateModified,
+  image,
+  publisherName = 'CalcFree',
+  publisherLogo = '/logo.svg',
+} = Astro.props;
+
+const pageUrl = url ?? absoluteUrl(Astro.url.pathname);
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline,
+  description,
+  url: pageUrl,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+  image: image ? absoluteUrl(image) : undefined,
+  datePublished: isoDate(datePublished),
+  dateModified: isoDate(dateModified ?? datePublished),
+  author: authorName
+    ? { '@type': 'Person', name: authorName, url: authorUrl ? absoluteUrl(authorUrl) : undefined }
+    : undefined,
+  publisher: {
+    '@type': 'Organization',
+    name: publisherName,
+    logo: { '@type': 'ImageObject', url: absoluteUrl(publisherLogo) },
+  },
+};
+
+const json = toJsonLd(data);
+---
+
+<script type="application/ld+json" is:inline set:html={json}></script>

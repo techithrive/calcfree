@@ -1,0 +1,52 @@
+---
+/**
+ * SeoHead — all per-page SEO meta in one place: title, description, a
+ * self-referencing canonical, OpenGraph and Twitter tags. Rendered inside
+ * <head> by BaseLayout. BaseLayout no longer emits these tags itself, so there
+ * is no duplication.
+ */
+import { getEntry } from 'astro:content';
+import { absoluteUrl } from '../../lib/schema';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
+
+const settings = await getEntry('settings', 'settings');
+const siteName = settings?.data.organization_name ?? 'CalcFree';
+const defaultOg = settings?.data.default_og_image ?? '/og-default.png';
+
+const canonicalUrl = canonical ?? absoluteUrl(Astro.url.pathname);
+const ogImageUrl = absoluteUrl(ogImage ?? defaultOg);
+---
+
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex,follow" />}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:site_name" content={siteName} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+{description && <meta name="twitter:description" content={description} />}
+<meta name="twitter:image" content={ogImageUrl} />

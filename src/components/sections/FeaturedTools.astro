@@ -1,0 +1,37 @@
+---
+/**
+ * FeaturedTools — a titled grid of tool cards. Used on the homepage for
+ * high-intent clusters ("Contractors & freelancers", "Homeowners", etc.) and
+ * anywhere a set of tools should be shown. `id` lets the header anchor link
+ * (e.g. /#tools) land here.
+ */
+import ToolCard from '../cards/ToolCard.astro';
+
+export interface ToolCardData {
+  title: string;
+  href: string;
+  summary?: string;
+  tag?: string;
+}
+
+interface Props {
+  heading?: string;
+  intro?: string;
+  tools: ToolCardData[];
+  id?: string;
+}
+
+const { heading, intro, tools, id } = Astro.props;
+---
+
+<section class="section" id={id}>
+  <div class="container">
+    {heading && <h2>{heading}</h2>}
+    {intro && <p class="lead" style="margin-bottom: var(--sp-5);">{intro}</p>}
+    <div class="grid grid-3">
+      {tools.map((t) => (
+        <ToolCard title={t.title} href={t.href} summary={t.summary} tag={t.tag} />
+      ))}
+    </div>
+  </div>
+</section>

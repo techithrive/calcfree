@@ -1,0 +1,124 @@
+---
+/**
+ * Site header: logo + primary navigation.
+ *
+ * Navigation is a single <details> disclosure. On desktop the menu is always
+ * shown (the summary is hidden); on mobile it toggles open/closed using the
+ * browser's native <details> behaviour — so it works with JavaScript disabled.
+ * Every item is a real, crawlable <a>.
+ */
+const nav = [
+  { label: 'Tools', href: '/#tools' },
+  { label: 'Categories', href: '/#categories' },
+  { label: 'Blog', href: '/blog/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="/" aria-label="CalcFree home">
+      <img src="/logo.svg" alt="" width="160" height="32" />
+      <span class="visually-hidden">CalcFree</span>
+    </a>
+
+    <details class="nav">
+      <summary class="nav-summary" aria-label="Toggle navigation">
+        <span class="nav-summary-icon" aria-hidden="true"></span>
+        <span>Menu</span>
+      </summary>
+      <nav aria-label="Primary">
+        <ul class="nav-list">
+          {nav.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: relative;
+  }
+  .nav-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.8rem;
+    user-select: none;
+  }
+  .nav-summary::-webkit-details-marker {
+    display: none;
+  }
+  .nav-summary-icon {
+    width: 16px;
+    height: 2px;
+    background: var(--ink);
+    position: relative;
+  }
+  .nav-summary-icon::before,
+  .nav-summary-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 16px;
+    height: 2px;
+    background: var(--ink);
+  }
+  .nav-summary-icon::before { top: -5px; }
+  .nav-summary-icon::after { top: 5px; }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-list a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+  }
+  .nav-list a:hover {
+    color: var(--accent-strong);
+  }
+
+  /* Mobile: native disclosure. Closed = hidden, open = dropdown panel. */
+  @media (max-width: 819px) {
+    .nav[open] .nav-list {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: var(--sp-4);
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      z-index: 60;
+    }
+  }
+
+  /* Desktop: menu always visible, toggle hidden. Works without JS. */
+  @media (min-width: 820px) {
+    .nav-summary {
+      display: none;
+    }
+    .nav-list {
+      display: flex;
+      gap: var(--sp-5);
+      align-items: center;
+    }
+  }
+</style>

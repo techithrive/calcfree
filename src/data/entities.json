@@ -1,0 +1,122 @@
+{
+  "_note": "Entity map for CalcFree. Defines the real-world concepts (entities) each category is about, with official reference URLs where they exist. Used to inform internal context and 'about/mentions' schema for AI and search understanding. This is reference data, not keywords to stuff into copy.",
+  "organization": {
+    "name": "CalcFree",
+    "type": "Organization",
+    "knowsAbout": [
+      "UK income tax",
+      "National Insurance",
+      "Construction Industry Scheme",
+      "IR35 / off-payroll working",
+      "Corporation tax",
+      "Dividend tax",
+      "Capital gains tax",
+      "Inheritance tax",
+      "Land transfer tax",
+      "HECS-HELP",
+      "Home improvement cost estimation"
+    ]
+  },
+  "categories": {
+    "uk-contractor-tax": {
+      "primary": [
+        { "name": "Construction Industry Scheme", "url": "https://www.gov.uk/what-is-the-construction-industry-scheme" },
+        { "name": "IR35 / off-payroll working", "url": "https://www.gov.uk/guidance/understanding-off-payroll-working-ir35" },
+        { "name": "National Insurance", "url": "https://www.gov.uk/national-insurance" }
+      ],
+      "secondary": [
+        { "name": "Self Assessment", "url": "https://www.gov.uk/self-assessment-tax-returns" },
+        { "name": "Corporation tax", "url": "https://www.gov.uk/corporation-tax" },
+        { "name": "Dividend tax", "url": "https://www.gov.uk/tax-on-dividends" },
+        { "name": "Benefit in kind", "url": "https://www.gov.uk/tax-company-benefits" }
+      ],
+      "related": [
+        { "name": "HMRC", "url": "https://www.gov.uk/government/organisations/hm-revenue-customs" },
+        { "name": "Umbrella company" },
+        { "name": "Limited company" },
+        { "name": "Trading allowance", "url": "https://www.gov.uk/guidance/tax-free-allowances-on-property-and-trading-income" }
+      ]
+    },
+    "uk-finance": {
+      "primary": [
+        { "name": "Income tax", "url": "https://www.gov.uk/income-tax-rates" },
+        { "name": "Capital gains tax", "url": "https://www.gov.uk/capital-gains-tax" },
+        { "name": "Inheritance tax", "url": "https://www.gov.uk/inheritance-tax" }
+      ],
+      "secondary": [
+        { "name": "Salary sacrifice", "url": "https://www.gov.uk/guidance/salary-sacrifice-and-the-effects-on-paye" },
+        { "name": "Statutory redundancy pay", "url": "https://www.gov.uk/redundancy-your-rights" },
+        { "name": "Statutory maternity pay", "url": "https://www.gov.uk/maternity-pay-leave" },
+        { "name": "Scottish income tax", "url": "https://www.gov.scot/policies/taxes/income-tax/" }
+      ],
+      "related": [
+        { "name": "HMRC", "url": "https://www.gov.uk/government/organisations/hm-revenue-customs" },
+        { "name": "Mortgage overpayment" },
+        { "name": "ISA" },
+        { "name": "Pension" }
+      ]
+    },
+    "home-project-costs": {
+      "primary": [
+        { "name": "Fencing cost" },
+        { "name": "Retaining wall cost" },
+        { "name": "Paver patio cost" }
+      ],
+      "secondary": [
+        { "name": "Concrete estimation" },
+        { "name": "Gravel estimation" },
+        { "name": "Solar panel payback" },
+        { "name": "Electric vehicle running cost" }
+      ],
+      "related": [
+        { "name": "Smart Export Guarantee", "url": "https://www.ofgem.gov.uk/environmental-and-social-schemes/smart-export-guarantee-seg" },
+        { "name": "Ofgem", "url": "https://www.ofgem.gov.uk/" }
+      ]
+    },
+    "business-tools": {
+      "primary": [
+        { "name": "Profit margin" },
+        { "name": "Markup" },
+        { "name": "Break-even analysis" }
+      ],
+      "secondary": [
+        { "name": "Contribution margin" },
+        { "name": "Day rate" },
+        { "name": "Pricing strategy" }
+      ],
+      "related": [
+        { "name": "Fixed costs" },
+        { "name": "Variable costs" }
+      ]
+    },
+    "global-finance": {
+      "primary": [
+        { "name": "Land transfer tax (Ontario)", "url": "https://www.ontario.ca/document/land-transfer-tax" },
+        { "name": "Municipal land transfer tax (Toronto)", "url": "https://www.toronto.ca/services-payments/property-taxes-utilities/municipal-land-transfer-tax/" },
+        { "name": "HECS-HELP", "url": "https://www.ato.gov.au/individuals-and-families/study-and-training-support-loans" }
+      ],
+      "secondary": [
+        { "name": "Novated lease", "url": "https://www.ato.gov.au/businesses-and-organisations/income-deductions-and-concessions/fringe-benefits-tax" },
+        { "name": "First-time home buyer rebate" }
+      ],
+      "related": [
+        { "name": "Canada Revenue Agency", "url": "https://www.canada.ca/en/revenue-agency.html" },
+        { "name": "Australian Taxation Office", "url": "https://www.ato.gov.au/" },
+        { "name": "Fringe Benefits Tax" }
+      ]
+    },
+    "wedding-planning": {
+      "primary": [
+        { "name": "Wedding budget" },
+        { "name": "Cost per guest" }
+      ],
+      "secondary": [
+        { "name": "Venue and catering cost" },
+        { "name": "Wedding photography cost" }
+      ],
+      "related": [
+        { "name": "UK regional cost of living" }
+      ]
+    }
+  }
+}

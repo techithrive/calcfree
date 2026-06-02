@@ -1,0 +1,30 @@
+---
+/**
+ * ToolCard — a single tool, used in homepage clusters, category grids and
+ * related-tools sections. Accepts primitive props so any parent can build the
+ * href (keeps the card decoupled from the content collection shape).
+ */
+interface Props {
+  title: string;
+  href: string;
+  summary?: string;
+  tag?: string;
+}
+
+const { title, href, summary, tag } = Astro.props;
+---
+
+<a class="card card-link" href={href}>
+  {tag && <span class="tag">{tag}</span>}
+  <h3>{title}</h3>
+  {summary && <p>{summary}</p>}
+</a>
+
+<style>
+  .card-link .tag {
+    margin-bottom: var(--sp-2);
+  }
+  .card-link h3 {
+    margin-bottom: var(--sp-1);
+  }
+</style>

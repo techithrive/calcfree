@@ -1,0 +1,84 @@
+---
+/**
+ * Blog post pages, generated from the blog collection (drafts excluded).
+ * Adds Article schema, FAQ schema (only when enabled), Breadcrumb schema, and
+ * links any related tools.
+ */
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import SchemaArticle from '../../components/seo/SchemaArticle.astro';
+import SchemaFaq from '../../components/seo/SchemaFaq.astro';
+import SchemaBreadcrumb from '../../components/seo/SchemaBreadcrumb.astro';
+import { blogHref, resolveToolRefs, resolveBlogRefs } from '../../lib/internal-links';
+import { absoluteUrl } from '../../lib/schema';
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.data.slug ?? post.id },
+    props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { post } = Astro.props as Props;
+
+const author = await getEntry(post.data.author);
+const authorHref = author ? `/author/${author.data.slug ?? author.id}/` : '#';
+
+const relatedTools = await resolveToolRefs(post.data.related_tools);
+const relatedBlogs = await resolveBlogRefs(post.data.related_blogs);
+
+const { Content } = await render(post);
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog/' },
+  { label: post.data.title },
+];
+
+const faqs = post.data.faqs ?? [];
+const pageUrl = absoluteUrl(blogHref(post));
+
+const seo = {
+  title: post.data.seo_title ?? `${post.data.title} | CalcFree`,
+  description: post.data.meta_description ?? post.data.excerpt,
+  ogImage: post.data.og_image ?? post.data.featured_image,
+};
+
+const authorObj = author
+  ? { name: author.data.name, href: authorHref, role: author.data.role }
+  : undefined;
+---
+
+<BlogLayout
+  seo={seo}
+  breadcrumbs={crumbs}
+  title={post.data.title}
+  author={authorObj}
+  publishedDate={post.data.published_date}
+  updatedDate={post.data.updated_date}
+  quickAnswer={post.data.quick_answer}
+  keyTakeaways={post.data.key_takeaways}
+  faqs={faqs}
+  relatedTools={relatedTools}
+  relatedBlogs={relatedBlogs}
+>
+  <Fragment slot="head">
+    <SchemaArticle
+      headline={post.data.title}
+      description={post.data.meta_description ?? post.data.excerpt}
+      url={pageUrl}
+      authorName={author?.data.name}
+      authorUrl={authorHref}
+      datePublished={post.data.published_date}
+      dateModified={post.data.updated_date}
+      image={post.data.og_image ?? post.data.featured_image}
+    />
+    <SchemaFaq faqs={faqs} enabled={post.data.enable_faq_schema} />
+    <SchemaBreadcrumb items={crumbs} />
+  </Fragment>
+
+  <Content />
+</BlogLayout>

@@ -1,0 +1,67 @@
+---
+/**
+ * SchemaWebApplication — JSON-LD for a calculator/tool page. Uses only visible
+ * page data. Free tool => Offer price 0. No aggregateRating/reviews are emitted
+ * (we don't invent ratings).
+ */
+import { absoluteUrl, toJsonLd } from '../../lib/schema';
+
+interface Props {
+  name: string;
+  description?: string;
+  url?: string;
+  applicationCategory?: string;
+  schemaType?: 'WebApplication' | 'SoftwareApplication';
+  authorName?: string;
+  authorUrl?: string;
+  publisherName?: string;
+  publisherLogo?: string;
+  priceCurrency?: string;
+  dateModified?: string;
+}
+
+const {
+  name,
+  description,
+  url,
+  applicationCategory = 'UtilitiesApplication',
+  schemaType = 'WebApplication',
+  authorName,
+  authorUrl,
+  publisherName = 'CalcFree',
+  publisherLogo = '/logo.svg',
+  priceCurrency = 'GBP',
+  dateModified,
+} = Astro.props;
+
+const pageUrl = url ?? absoluteUrl(Astro.url.pathname);
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': schemaType,
+  name,
+  description,
+  url: pageUrl,
+  applicationCategory,
+  operatingSystem: 'Any',
+  isAccessibleForFree: true,
+  dateModified,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency,
+  },
+  author: authorName
+    ? { '@type': 'Person', name: authorName, url: authorUrl ? absoluteUrl(authorUrl) : undefined }
+    : undefined,
+  publisher: {
+    '@type': 'Organization',
+    name: publisherName,
+    logo: { '@type': 'ImageObject', url: absoluteUrl(publisherLogo) },
+  },
+};
+
+const json = toJsonLd(data);
+---
+
+<script type="application/ld+json" is:inline set:html={json}></script>

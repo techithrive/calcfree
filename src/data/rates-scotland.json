@@ -1,0 +1,15 @@
+{
+  "_note": "Representative Scottish income tax bands for 2025/26. The personal allowance and National Insurance are UK-wide; only the income tax bands differ. VERIFY against gov.scot / HMRC and update each year. Used by the Scottish Income Tax tool (added in a later batch).",
+  "tax_year": "2025/26",
+  "source": "https://www.gov.scot/publications/scottish-income-tax-2025-26/",
+  "personal_allowance": 12570,
+  "taper_threshold": 100000,
+  "bands": [
+    { "name": "Starter rate", "rate": 19, "limit": 15397 },
+    { "name": "Basic rate", "rate": 20, "limit": 27491 },
+    { "name": "Intermediate rate", "rate": 21, "limit": 43662 },
+    { "name": "Higher rate", "rate": 42, "limit": 75000 },
+    { "name": "Advanced rate", "rate": 45, "limit": 125140 },
+    { "name": "Top rate", "rate": 48, "limit": null }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "_note": "Representative UK (England, Wales & Northern Ireland) figures for the 2025/26 tax year. These MUST be verified against HMRC before you rely on them, and updated every tax year. Editing this file updates every calculator that uses it — no code change needed.",
+  "tax_year": "2025/26",
+  "sources": {
+    "income_tax": "https://www.gov.uk/income-tax-rates",
+    "national_insurance": "https://www.gov.uk/self-employed-national-insurance-rates",
+    "dividends": "https://www.gov.uk/tax-on-dividends",
+    "corporation_tax": "https://www.gov.uk/corporation-tax-rates",
+    "company_car": "https://www.gov.uk/tax-company-benefits/tax-on-company-cars"
+  },
+  "income_tax": {
+    "personal_allowance": 12570,
+    "taper_threshold": 100000,
+    "basic_rate": 20,
+    "basic_limit": 50270,
+    "higher_rate": 40,
+    "higher_limit": 125140,
+    "additional_rate": 45
+  },
+  "class4_nic": { "lower": 12570, "upper": 50270, "main_rate": 6, "upper_rate": 2 },
+  "class2_nic_note": "From 2024/25, self-employed people with profits above the threshold receive National Insurance credit without paying Class 2; modelled here as £0.",
+  "employee_nic": { "primary_threshold": 12570, "uel": 50270, "main_rate": 8, "upper_rate": 2 },
+  "employer_nic": { "secondary_threshold": 5000, "rate": 15 },
+  "apprenticeship_levy_rate": 0.5,
+  "dividends": {
+    "allowance": 500,
+    "basic_rate": 8.75,
+    "higher_rate": 33.75,
+    "additional_rate": 39.35
+  },
+  "corporation_tax": {
+    "small_profits_rate": 19,
+    "main_rate": 25,
+    "lower_limit": 50000,
+    "upper_limit": 250000,
+    "marginal_relief_fraction": 0.015
+  },
+  "trading_allowance": 1000,
+  "company_car_bik": {
+    "_note": "Simplified band table. Electric and plug-in hybrid percentages depend on the tax year and (for PHEVs) electric-only range. VERIFY the exact band for the specific vehicle and year.",
+    "electric_pct": 3,
+    "diesel_non_rde2_surcharge": 4,
+    "max_pct": 37,
+    "phev_range_bands": [
+      { "range_min": 130, "pct": 3 },
+      { "range_min": 70, "pct": 6 },
+      { "range_min": 40, "pct": 8 },
+      { "range_min": 30, "pct": 12 },
+      { "range_min": 0, "pct": 14 }
+    ],
+    "co2_bands": [
+      { "co2_max": 54, "pct": 15 },
+      { "co2_max": 59, "pct": 16 },
+      { "co2_max": 64, "pct": 17 },
+      { "co2_max": 69, "pct": 18 },
+      { "co2_max": 74, "pct": 19 },
+      { "co2_max": 79, "pct": 20 },
+      { "co2_max": 84, "pct": 21 },
+      { "co2_max": 89, "pct": 22 },
+      { "co2_max": 94, "pct": 23 },
+      { "co2_max": 99, "pct": 24 },
+      { "co2_max": 104, "pct": 25 },
+      { "co2_max": 109, "pct": 26 },
+      { "co2_max": 114, "pct": 27 },
+      { "co2_max": 119, "pct": 28 },
+      { "co2_max": 124, "pct": 29 },
+      { "co2_max": 129, "pct": 30 },
+      { "co2_max": 134, "pct": 31 },
+      { "co2_max": 139, "pct": 32 },
+      { "co2_max": 144, "pct": 33 },
+      { "co2_max": 149, "pct": 34 },
+      { "co2_max": 154, "pct": 35 },
+      { "co2_max": 159, "pct": 36 },
+      { "co2_max": 100000, "pct": 37 }
+    ]
+  }
+}

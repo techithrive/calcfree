@@ -1,0 +1,45 @@
+---
+/**
+ * KeyTakeaways — a short, scannable summary box. Designed for AEO/GEO: it gives
+ * answer engines and AI systems a clean, quotable set of points near the top of
+ * the page. Renders nothing if no points are supplied.
+ */
+interface Props {
+  heading?: string;
+  points: string[];
+}
+
+const { heading = 'Key takeaways', points } = Astro.props;
+---
+
+{points && points.length > 0 && (
+  <aside class="takeaways" aria-label={heading}>
+    <p class="takeaways-heading">{heading}</p>
+    <ul>
+      {points.map((p) => <li>{p}</li>)}
+    </ul>
+  </aside>
+)}
+
+<style>
+  .takeaways {
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius);
+    padding: var(--sp-4) var(--sp-5);
+    margin-top: var(--sp-5);
+  }
+  .takeaways-heading {
+    font-weight: 700;
+    margin: 0 0 var(--sp-2);
+    color: var(--ink);
+  }
+  .takeaways ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+  .takeaways li {
+    color: var(--ink-soft);
+  }
+</style>

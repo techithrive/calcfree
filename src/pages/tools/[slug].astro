@@ -1,0 +1,180 @@
+---
+/**
+ * Tool pages, generated from the tools collection (drafts excluded).
+ *
+ * The calculator is rendered as a real, static HTML form built from the tool's
+ * inputs (labels, units, help text). It is fully visible without JavaScript;
+ * Batch 5 attaches the calculation logic via the data-* attributes. The primary
+ * readable content (intro, assumptions, explainer body, FAQs) is all static.
+ */
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import SchemaWebApplication from '../../components/seo/SchemaWebApplication.astro';
+import SchemaFaq from '../../components/seo/SchemaFaq.astro';
+import SchemaBreadcrumb from '../../components/seo/SchemaBreadcrumb.astro';
+import { toolHref, categoryHref, resolveToolRefs, resolveBlogRefs } from '../../lib/internal-links';
+import { absoluteUrl } from '../../lib/schema';
+
+export const getStaticPaths = (async () => {
+  const tools = await getCollection('tools', ({ data }) => !data.draft);
+  return tools.map((tool) => ({
+    params: { slug: tool.data.slug ?? tool.id },
+    props: { tool },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { tool } = Astro.props as Props;
+
+const category = await getEntry(tool.data.category);
+const author = await getEntry(tool.data.author);
+const authorHref = author ? `/author/${author.data.slug ?? author.id}/` : '#';
+
+const relatedTools = await resolveToolRefs(tool.data.related_tools);
+const relatedBlogs = await resolveBlogRefs(tool.data.related_blogs);
+
+const { Content } = await render(tool);
+
+const crumbs = [
+  { label: 'Home', href: '/' },
+  ...(category ? [{ label: category.data.title, href: categoryHref(category) }] : []),
+  { label: tool.data.title },
+];
+
+const faqs = tool.data.faqs ?? [];
+const pageUrl = absoluteUrl(toolHref(tool));
+
+const seo = {
+  title: tool.data.seo_title ?? `${tool.data.title} | CalcFree`,
+  description: tool.data.meta_description ?? tool.data.hero_subcopy,
+  ogImage: tool.data.og_image ?? tool.data.image,
+};
+
+const authorObj = author
+  ? { name: author.data.name, href: authorHref, role: author.data.role }
+  : undefined;
+
+// Map currency-ish units to a sensible default prefix.
+const prefixFor = (input: (typeof tool.data.inputs)[number]) =>
+  input.type === 'currency' ? input.unit || '£' : undefined;
+const suffixFor = (input: (typeof tool.data.inputs)[number]) =>
+  input.type === 'percent' ? '%' : input.type === 'number' ? input.unit : undefined;
+---
+
+<ToolLayout
+  seo={seo}
+  breadcrumbs={crumbs}
+  h1={tool.data.hero_heading}
+  intro={tool.data.hero_subcopy}
+  quickAnswer={tool.data.quick_answer}
+  keyTakeaways={tool.data.key_takeaways}
+  sourceLabel={tool.data.source_label}
+  sourceUrl={tool.data.source_url}
+  faqs={faqs}
+  relatedTools={relatedTools}
+  relatedBlogs={relatedBlogs}
+  author={authorObj}
+  lastReviewed={tool.data.last_reviewed}
+  adSlots={tool.data.ad_slots}
+>
+  <Fragment slot="head">
+    <SchemaWebApplication
+      name={tool.data.title}
+      description={tool.data.meta_description ?? tool.data.hero_subcopy}
+      url={pageUrl}
+      schemaType={tool.data.schema_type}
+      authorName={author?.data.name}
+      authorUrl={authorHref}
+      dateModified={tool.data.last_reviewed.toISOString().split('T')[0]}
+    />
+    <SchemaFaq faqs={faqs} enabled={tool.data.enable_faq_schema} />
+    <SchemaBreadcrumb items={crumbs} />
+  </Fragment>
+
+  {/* Static calculator form. Batch 5 wires the compute logic via data-calc. */}
+  <form
+    slot="calculator"
+    class="calc"
+    data-calc={tool.data.calculator_id}
+    novalidate
+  >
+    <div class="calc-grid">
+      {tool.data.inputs.map((input) => (
+        <div class={`field ${input.type === 'toggle' ? 'field-wide' : ''}`}>
+          <label for={input.field_id}>{input.label}</label>
+          {input.help_text && <span class="help">{input.help_text}</span>}
+
+          {input.type === 'select' ? (
+            <select
+              class="input"
+              id={input.field_id}
+              name={input.field_id}
+              data-field={input.field_id}
+              data-type={input.type}
+            >
+              {(input.options ?? []).map((opt) => (
+                <option value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          ) : input.type === 'toggle' ? (
+            <label class="toggle">
+              <input
+                type="checkbox"
+                id={input.field_id}
+                name={input.field_id}
+                data-field={input.field_id}
+                data-type={input.type}
+              />
+              <span>{input.unit ?? 'Yes'}</span>
+            </label>
+          ) : (
+            <span class="input-group">
+              {prefixFor(input) && <span class="prefix">{prefixFor(input)}</span>}
+              <input
+                class="input"
+                id={input.field_id}
+                name={input.field_id}
+                type="text"
+                inputmode="decimal"
+                placeholder={input.default !== undefined ? String(input.default) : ''}
+                data-field={input.field_id}
+                data-type={input.type}
+                data-min={input.min}
+                data-max={input.max}
+              />
+              {suffixFor(input) && <span class="suffix">{suffixFor(input)}</span>}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="calc-actions" style="margin-top: var(--sp-5);">
+      <button type="button" class="btn btn-primary" data-calc-run>Calculate</button>
+    </div>
+
+    <div class="result" data-calc-result hidden>
+      <p class="muted">Enter your details above and select Calculate to see your result.</p>
+    </div>
+  </form>
+
+  <Fragment slot="assumptions">
+    <p>{tool.data.assumptions}</p>
+  </Fragment>
+
+  <Content />
+</ToolLayout>
+
+<style>
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+  }
+  .calc-actions {
+    display: flex;
+    gap: var(--sp-3);
+  }
+</style>

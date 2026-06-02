@@ -1,0 +1,49 @@
+---
+/**
+ * Category pages. Only ACTIVE categories (>=1 published tool) get a route, so
+ * empty categories are never generated, never linked, and never appear in the
+ * sitemap. Lists every published tool in the category as static links, plus
+ * links to sibling active categories. Includes BreadcrumbList schema.
+ */
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import CategoryLayout from '../../layouts/CategoryLayout.astro';
+import SchemaBreadcrumb from '../../components/seo/SchemaBreadcrumb.astro';
+import { categoryHref, toolsInCategory, activeCategories } from '../../lib/internal-links';
+
+export const getStaticPaths = (async () => {
+  const categories = await activeCategories(1);
+  return categories.map((category) => ({
+    params: { slug: category.data.slug ?? category.id },
+    props: { category },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { category } = Astro.props as Props;
+
+const tools = await toolsInCategory(category.id);
+
+const siblings = (await activeCategories(1))
+  .filter((c) => c.id !== category.id)
+  .map((c) => ({ title: c.data.title, href: categoryHref(c) }));
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: category.data.title }];
+
+const seo = {
+  title: category.data.seo_title ?? `${category.data.title} | CalcFree`,
+  description: category.data.meta_description,
+};
+---
+
+<CategoryLayout
+  seo={seo}
+  breadcrumbs={crumbs}
+  title={category.data.title}
+  tools={tools}
+  siblingCategories={siblings}
+>
+  <SchemaBreadcrumb slot="head" items={crumbs} />
+  <Fragment slot="intro">
+    <p>{category.data.intro_copy}</p>
+  </Fragment>
+</CategoryLayout>

@@ -1,0 +1,362 @@
+# =============================================================================
+# Decap CMS configuration for CalcFree
+#
+# Backend: GitHub. Editing happens at https://calcfree.online/admin and commits
+# to the repo, which triggers a rebuild + redeploy. If you later host on a
+# platform with its own auth (e.g. Netlify), switch `backend.name` accordingly.
+#
+# IMPORTANT: keep field names in sync with src/content/config.ts.
+# =============================================================================
+
+backend:
+  name: github
+  repo: your-org/calcfree # <-- change to your GitHub owner/repo
+  branch: main
+  # An OAuth provider is required for the GitHub backend on static hosts.
+  # See README "CMS editing guide" for the one-time OAuth setup.
+
+# Saves drafts/edits as commits; previews build on deploy.
+publish_mode: editorial_workflow
+
+# For LOCAL CMS testing only: uncomment the next line and run `npx decap-server`
+# in a second terminal, then open http://localhost:4321/admin (no GitHub login needed).
+# Comment it out again before deploying.
+# local_backend: true
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+site_url: https://calcfree.online
+display_url: https://calcfree.online
+logo_url: /logo.svg
+
+# Reusable bits ----------------------------------------------------------------
+# (Decap doesn't support YAML anchors across the whole file in every version,
+#  so fields are written out per collection for reliability.)
+
+collections:
+  # ---- Site settings (singleton) --------------------------------------------
+  - name: settings
+    label: "Site settings"
+    delete: false
+    files:
+      - name: settings
+        label: "Global settings"
+        file: "src/content/settings.json"
+        fields:
+          - { name: id, label: ID, widget: hidden, default: "settings" }
+          - name: footer_credit
+            label: "Footer credit"
+            widget: string
+            default: "Developed by Techithrive.com"
+            hint: "Must read exactly: Developed by Techithrive.com — do not change the spelling (capital T, then lowercase, ending in .com)."
+            pattern:
+              ['^Developed by Techithrive\.com$', "Must be exactly: Developed by Techithrive.com"]
+          - { name: adsense_publisher_id, label: "AdSense publisher ID", widget: string, required: false, hint: "e.g. ca-pub-XXXXXXXXXXXXXXXX. Leave blank until approved." }
+          - { name: organization_name, label: "Organisation name", widget: string, default: "CalcFree" }
+          - { name: organization_logo, label: "Organisation logo path", widget: string, default: "/logo.svg" }
+          - name: organization_sameas
+            label: "Social / profile URLs (sameAs)"
+            widget: list
+            required: false
+            field: { name: url, label: URL, widget: string }
+          - { name: default_og_image, label: "Default OG image path", widget: string, default: "/og-default.png" }
+
+  # ---- Homepage (singleton) -------------------------------------------------
+  - name: homepage
+    label: "Homepage"
+    delete: false
+    files:
+      - name: homepage
+        label: "Homepage content"
+        file: "src/content/homepage.json"
+        fields:
+          - { name: id, label: ID, widget: hidden, default: "homepage" }
+          - { name: seo_title, label: "SEO title", widget: string, required: false }
+          - { name: meta_description, label: "Meta description", widget: text, required: false }
+          - { name: hero_heading, label: "Hero heading", widget: string }
+          - { name: hero_subcopy, label: "Hero sub-copy", widget: text }
+          - { name: hero_cta_text, label: "Hero CTA text", widget: string, default: "Browse tools" }
+          - name: featured_tools
+            label: "Featured tools"
+            widget: relation
+            collection: tools
+            search_fields: [title]
+            value_field: "{{slug}}"
+            display_fields: [title]
+            multiple: true
+            required: false
+          - name: featured_categories
+            label: "Featured categories"
+            widget: relation
+            collection: categories
+            search_fields: [title]
+            value_field: "{{slug}}"
+            display_fields: [title]
+            multiple: true
+            required: false
+          - name: trust_points
+            label: "Trust points"
+            widget: list
+            required: false
+            fields:
+              - { name: icon, label: Icon token, widget: string, required: false }
+              - { name: heading, label: Heading, widget: string }
+              - { name: text, label: Text, widget: text }
+          - name: featured_blogs
+            label: "Featured blog posts"
+            widget: relation
+            collection: blog
+            search_fields: [title]
+            value_field: "{{slug}}"
+            display_fields: [title]
+            multiple: true
+            required: false
+
+  # ---- Tools ----------------------------------------------------------------
+  - name: tools
+    label: "Tools"
+    label_singular: "Tool"
+    folder: "src/content/tools"
+    create: true
+    slug: "{{slug}}"
+    preview_path: "tools/{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: draft, label: Draft, widget: boolean, default: true }
+      - name: category
+        label: Category
+        widget: relation
+        collection: categories
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+      - { name: target_keyword, label: "Target keyword", widget: string }
+      - name: search_intent
+        label: "Search intent"
+        widget: select
+        options: [transactional, commercial, informational, mixed]
+        default: commercial
+      - { name: seo_title, label: "SEO title", widget: string, required: false, hint: "≤ ~60 characters" }
+      - { name: meta_description, label: "Meta description", widget: text, required: false, hint: "≤ ~155 characters" }
+      - { name: hero_heading, label: "Hero heading (H1)", widget: string }
+      - { name: hero_subcopy, label: "Intro sub-copy", widget: text }
+      - { name: quick_answer, label: "Quick answer (top of page, for AEO)", widget: text, required: false }
+      - name: key_takeaways
+        label: "Key takeaways (AEO/GEO summary bullets)"
+        widget: list
+        required: false
+        field: { name: point, label: Point, widget: string }
+      - name: inputs
+        label: "Calculator inputs"
+        widget: list
+        fields:
+          - { name: label, label: Label, widget: string }
+          - { name: field_id, label: "Field ID", widget: string, hint: "lowercase, no spaces; used by the calculator logic" }
+          - name: type
+            label: Type
+            widget: select
+            options: [number, currency, percent, select, toggle, text]
+          - { name: unit, label: Unit, widget: string, required: false }
+          - { name: default, label: Default value, widget: string, required: false }
+          - { name: min, label: Min, widget: number, required: false, value_type: float }
+          - { name: max, label: Max, widget: number, required: false, value_type: float }
+          - { name: required, label: Required, widget: boolean, default: false }
+          - { name: help_text, label: "Help text", widget: string, required: false }
+          - name: options
+            label: "Select options"
+            widget: list
+            required: false
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: value, label: Value, widget: string }
+      - { name: calculator_id, label: "Calculator logic ID", widget: string, hint: "matches a file in src/lib/calculators/<id>.ts" }
+      - { name: formula_notes, label: "Formula notes (human explanation)", widget: markdown, required: false }
+      - name: result_sections
+        label: "Result sections"
+        widget: list
+        required: false
+        fields:
+          - { name: heading, label: Heading, widget: string }
+          - { name: result_template, label: "Result template", widget: string }
+          - { name: explanation, label: Explanation, widget: text, required: false }
+      - { name: assumptions, label: "Assumptions (+ source link)", widget: markdown }
+      - { name: source_label, label: "Source label", widget: string, required: false, hint: "e.g. HMRC, CRA, ATO, Ofgem" }
+      - { name: source_url, label: "Source URL", widget: string, required: false }
+      - name: faqs
+        label: FAQs
+        widget: list
+        required: false
+        fields:
+          - { name: question, label: Question, widget: string }
+          - { name: answer, label: Answer, widget: text }
+      - { name: enable_faq_schema, label: "Enable FAQ schema", widget: boolean, default: false, hint: "Only true if the on-page FAQ matches exactly." }
+      - name: schema_type
+        label: "Schema type"
+        widget: select
+        options: [WebApplication, SoftwareApplication]
+        default: WebApplication
+      - name: related_tools
+        label: "Related tools"
+        widget: relation
+        collection: tools
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        multiple: true
+        required: false
+      - name: related_blogs
+        label: "Related blog posts"
+        widget: relation
+        collection: blog
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        multiple: true
+        required: false
+      - name: ad_slots
+        label: "Ad slots"
+        widget: select
+        multiple: true
+        options: [after-intro, after-result, mid-content, none]
+        default: [after-intro, after-result]
+      - { name: cta_text, label: "CTA text", widget: string, required: false }
+      - { name: image, label: "Image", widget: image, required: false }
+      - { name: og_image, label: "OG image", widget: image, required: false }
+      - name: author
+        label: Author
+        widget: relation
+        collection: authors
+        search_fields: [name]
+        value_field: "{{slug}}"
+        display_fields: [name]
+      - { name: last_reviewed, label: "Last reviewed", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+      - { name: body, label: "Body content (700–1,200 words)", widget: markdown }
+
+  # ---- Blog -----------------------------------------------------------------
+  - name: blog
+    label: "Blog"
+    label_singular: "Post"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    preview_path: "blog/{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: draft, label: Draft, widget: boolean, default: true }
+      - name: category
+        label: Category
+        widget: relation
+        collection: categories
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        required: false
+      - { name: seo_title, label: "SEO title", widget: string, required: false }
+      - { name: meta_description, label: "Meta description", widget: text, required: false }
+      - { name: excerpt, label: Excerpt, widget: text }
+      - { name: quick_answer, label: "Quick answer (top, for AEO)", widget: text, required: false }
+      - name: key_takeaways
+        label: "Key takeaways (AEO/GEO bullets)"
+        widget: list
+        required: false
+        field: { name: point, label: Point, widget: string }
+      - name: author
+        label: Author
+        widget: relation
+        collection: authors
+        search_fields: [name]
+        value_field: "{{slug}}"
+        display_fields: [name]
+      - { name: published_date, label: "Published date", widget: datetime, date_format: "YYYY-MM-DD", time_format: false }
+      - { name: updated_date, label: "Updated date", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, required: false }
+      - { name: featured_image, label: "Featured image", widget: image, required: false }
+      - { name: og_image, label: "OG image", widget: image, required: false }
+      - name: faqs
+        label: FAQs
+        widget: list
+        required: false
+        fields:
+          - { name: question, label: Question, widget: string }
+          - { name: answer, label: Answer, widget: text }
+      - { name: enable_faq_schema, label: "Enable FAQ schema", widget: boolean, default: false }
+      - name: related_tools
+        label: "Related tools"
+        widget: relation
+        collection: tools
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        multiple: true
+        required: false
+      - name: related_blogs
+        label: "Related posts"
+        widget: relation
+        collection: blog
+        search_fields: [title]
+        value_field: "{{slug}}"
+        display_fields: [title]
+        multiple: true
+        required: false
+      - { name: body, label: Body, widget: markdown }
+
+  # ---- Categories -----------------------------------------------------------
+  - name: categories
+    label: "Categories"
+    label_singular: "Category"
+    folder: "src/content/categories"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: seo_title, label: "SEO title", widget: string, required: false }
+      - { name: meta_description, label: "Meta description", widget: text, required: false }
+      - { name: icon, label: "Icon token", widget: string, required: false }
+      - { name: order, label: "Sort order", widget: number, default: 0, value_type: int }
+      - { name: intro_copy, label: "Intro copy (150–300 words, unique)", widget: markdown }
+      - name: featured_tool_slugs
+        label: "Featured tool slugs"
+        widget: list
+        required: false
+        field: { name: slug, label: Slug, widget: string }
+      - { name: body, label: "Extra body (optional)", widget: markdown, required: false }
+
+  # ---- Authors --------------------------------------------------------------
+  - name: authors
+    label: "Authors"
+    label_singular: "Author"
+    folder: "src/content/authors"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{name}}"
+    fields:
+      - { name: name, label: Name, widget: string }
+      - { name: role, label: Role, widget: string, required: false }
+      - { name: credentials, label: Credentials, widget: string, required: false }
+      - { name: photo, label: Photo, widget: image, required: false }
+      - name: links
+        label: "Profile links (sameAs)"
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Label, widget: string }
+          - { name: url, label: URL, widget: string }
+      - { name: body, label: Bio, widget: markdown }
+
+  # ---- Static pages ---------------------------------------------------------
+  - name: pages
+    label: "Pages"
+    label_singular: "Page"
+    folder: "src/content/pages"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: seo_title, label: "SEO title", widget: string, required: false }
+      - { name: meta_description, label: "Meta description", widget: text, required: false }
+      - { name: last_updated, label: "Last updated", widget: datetime, date_format: "YYYY-MM-DD", time_format: false, required: false }
+      - { name: body, label: Body, widget: markdown }

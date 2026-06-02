@@ -1,0 +1,35 @@
+---
+/**
+ * Visible breadcrumb trail. The matching BreadcrumbList schema is added in
+ * Batch 3 from the same items array, so they always stay in sync.
+ *
+ * Pass an ordered list; the last item is treated as the current page (no link).
+ */
+export interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs container" aria-label="Breadcrumb">
+  <ol>
+    {items.map((item, i) => {
+      const isLast = i === items.length - 1;
+      return (
+        <li>
+          {item.href && !isLast ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <span aria-current={isLast ? 'page' : undefined}>{item.label}</span>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>

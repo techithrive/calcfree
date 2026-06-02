@@ -1,0 +1,25 @@
+{
+  "_note": "Representative Ontario provincial and Toronto municipal Land Transfer Tax brackets plus first-time buyer rebates. VERIFY against the Ontario Ministry of Finance and the City of Toronto before relying on them. Used by the Canada Land Transfer Tax tool (later batch). Amounts in CAD.",
+  "source_province": "https://www.ontario.ca/document/land-transfer-tax",
+  "source_toronto": "https://www.toronto.ca/services-payments/property-taxes-utilities/municipal-land-transfer-tax/",
+  "ontario": {
+    "brackets": [
+      { "up_to": 55000, "rate": 0.5 },
+      { "up_to": 250000, "rate": 1.0 },
+      { "up_to": 400000, "rate": 1.5 },
+      { "up_to": 2000000, "rate": 2.0 },
+      { "up_to": null, "rate": 2.5 }
+    ],
+    "first_time_rebate_max": 4000
+  },
+  "toronto": {
+    "brackets": [
+      { "up_to": 55000, "rate": 0.5 },
+      { "up_to": 250000, "rate": 1.0 },
+      { "up_to": 400000, "rate": 1.5 },
+      { "up_to": 2000000, "rate": 2.0 },
+      { "up_to": null, "rate": 2.5 }
+    ],
+    "first_time_rebate_max": 4475
+  }
+}

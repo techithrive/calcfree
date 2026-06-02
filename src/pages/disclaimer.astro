@@ -1,0 +1,30 @@
+---
+/**
+ * Static page: disclaimer. Content comes from the 'pages' collection
+ * (src/content/pages/disclaimer.md). If the content file is missing, the build
+ * fails clearly here — real content is added in Batch 6 (no fake thin page).
+ */
+import { getEntry, render } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+import SchemaBreadcrumb from '../components/seo/SchemaBreadcrumb.astro';
+
+const entry = await getEntry('pages', 'disclaimer');
+if (!entry) {
+  throw new Error(
+    "Missing content: src/content/pages/disclaimer.md is required for /disclaimer/. " +
+      'Add it in the CMS (or Batch 6) before building.'
+  );
+}
+const { Content } = await render(entry);
+
+const crumbs = [{ label: 'Home', href: '/' }, { label: entry.data.title }];
+const seo = {
+  title: entry.data.seo_title ?? `${entry.data.title} | CalcFree`,
+  description: entry.data.meta_description,
+};
+---
+
+<PageLayout seo={seo} breadcrumbs={crumbs} title={entry.data.title} lastUpdated={entry.data.last_updated}>
+  <SchemaBreadcrumb slot="head" items={crumbs} />
+  <Content />
+</PageLayout>

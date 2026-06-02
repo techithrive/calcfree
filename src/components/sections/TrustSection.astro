@@ -1,0 +1,32 @@
+---
+/**
+ * TrustSection — honest, specific reasons to trust the tools (privacy, sourced
+ * assumptions, kept current). No superlatives, no fake stats.
+ */
+interface TrustPoint {
+  heading: string;
+  text: string;
+  icon?: string;
+}
+
+interface Props {
+  heading?: string;
+  points: TrustPoint[];
+}
+
+const { heading = 'Why CalcFree', points } = Astro.props;
+---
+
+<section class="section trust">
+  <div class="container">
+    <h2>{heading}</h2>
+    <div class="trust-grid" style="margin-top: var(--sp-5);">
+      {points.map((p) => (
+        <div class="trust-item">
+          <h3>{p.heading}</h3>
+          <p class="muted">{p.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

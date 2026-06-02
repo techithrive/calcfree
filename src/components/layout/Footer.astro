@@ -1,0 +1,100 @@
+---
+/**
+ * Site footer.
+ *
+ * Includes: category links (all categories, sorted), legal links, a sitemap
+ * link, the blog link, and the footer credit. The credit text comes from CMS
+ * settings but falls back to the exact required string. Techithrive is mentioned
+ * once, quietly — no promotional block.
+ */
+import { getEntry } from 'astro:content';
+import { safeFooterCredit } from '../../lib/footer-credit-guard';
+import { activeCategories } from '../../lib/internal-links';
+
+const categories = await activeCategories(1);
+
+const settings = await getEntry('settings', 'settings');
+// safeFooterCredit returns the exact required string unless the CMS value is
+// already exactly correct — so a typo can never reach the page.
+const footerCredit = safeFooterCredit(settings?.data.footer_credit);
+
+const year = new Date().getFullYear();
+
+const categoryHref = (entry: (typeof categories)[number]) =>
+  `/category/${entry.data.slug ?? entry.id}/`;
+
+const legal = [
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
+  { label: 'Privacy Policy', href: '/privacy/' },
+  { label: 'Terms', href: '/terms/' },
+  { label: 'Disclaimer', href: '/disclaimer/' },
+];
+
+const trust = [
+  { label: 'Editorial Policy', href: '/editorial-policy/' },
+  { label: 'Methodology', href: '/methodology/' },
+  { label: 'Sources Policy', href: '/sources-policy/' },
+  { label: 'Review Policy', href: '/review-policy/' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-cols">
+      <div>
+        <a class="brand" href="/" aria-label="CalcFree home" style="margin-bottom: var(--sp-3);">
+          <img src="/logo.svg" alt="CalcFree" width="150" height="30" />
+        </a>
+        <p style="color:#a9a8b4; max-width: 34ch; font-size: 0.95rem;">
+          Practical calculators for tax, money and real-world projects — with the
+          assumptions and sources spelled out.
+        </p>
+      </div>
+
+      <div>
+        <h4>Categories</h4>
+        <ul>
+          {categories.map((c) => (
+            <li><a href={categoryHref(c)}>{c.data.title}</a></li>
+          ))}
+          {categories.length === 0 && (
+            <li><a href="/#categories">Browse categories</a></li>
+          )}
+        </ul>
+      </div>
+
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="/#tools">All tools</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/sitemap-index.xml">Sitemap</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Company</h4>
+        <ul>
+          {legal.map((l) => (
+            <li><a href={l.href}>{l.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h4>Trust &amp; standards</h4>
+        <ul>
+          {trust.map((l) => (
+            <li><a href={l.href}>{l.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-credit">
+      <span>© {year} CalcFree. Estimates for planning, not financial or legal advice.</span>
+      <span>{footerCredit}</span>
+    </div>
+  </div>
+</footer>

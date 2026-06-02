@@ -1,0 +1,41 @@
+---
+/**
+ * RelatedBlogs — related/latest posts, reusing BlogCard. Renders nothing when
+ * empty.
+ */
+import BlogCard from '../cards/BlogCard.astro';
+
+export interface BlogCardData {
+  title: string;
+  href: string;
+  excerpt?: string;
+  date?: Date | string;
+  author?: string;
+}
+
+interface Props {
+  heading?: string;
+  posts: BlogCardData[];
+}
+
+const { heading = 'Related reading', posts } = Astro.props;
+---
+
+{posts && posts.length > 0 && (
+  <section class="section">
+    <div class="container">
+      <h2>{heading}</h2>
+      <div class="grid grid-3" style="margin-top: var(--sp-4);">
+        {posts.map((p) => (
+          <BlogCard
+            title={p.title}
+            href={p.href}
+            excerpt={p.excerpt}
+            date={p.date}
+            author={p.author}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+)}

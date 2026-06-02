@@ -1,0 +1,131 @@
+---
+/**
+ * Author pages, generated from the authors collection. Shows the author's name,
+ * role, credentials, bio and profile links, plus the tools and posts they
+ * wrote. Person JSON-LD is built with the existing schema helper (no new
+ * component needed) and only includes fields we actually have.
+ */
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/layout/Breadcrumbs.astro';
+import SchemaBreadcrumb from '../../components/seo/SchemaBreadcrumb.astro';
+import ToolCard from '../../components/cards/ToolCard.astro';
+import BlogCard from '../../components/cards/BlogCard.astro';
+import { toolHref, blogHref } from '../../lib/internal-links';
+import { absoluteUrl, toJsonLd } from '../../lib/schema';
+
+export const getStaticPaths = (async () => {
+  const authors = await getCollection('authors');
+  return authors.map((author) => ({
+    params: { slug: author.data.slug ?? author.id },
+    props: { author },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { author } = Astro.props as Props;
+
+const { Content } = await render(author);
+
+const authoredTools = (await getCollection('tools', ({ data }) => !data.draft))
+  .filter((t) => t.data.author?.id === author.id)
+  .map((t) => ({ title: t.data.title, href: toolHref(t), summary: t.data.hero_subcopy }));
+
+const authoredPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .filter((p) => p.data.author?.id === author.id)
+  .map((p) => ({ title: p.data.title, href: blogHref(p), excerpt: p.data.excerpt, date: p.data.published_date }));
+
+const pageUrl = absoluteUrl(`/author/${author.data.slug ?? author.id}/`);
+const crumbs = [{ label: 'Home', href: '/' }, { label: author.data.name }];
+
+const personJson = toJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: author.data.name,
+  jobTitle: author.data.role,
+  description: author.data.credentials,
+  url: pageUrl,
+  image: author.data.photo ? absoluteUrl(author.data.photo) : undefined,
+  sameAs: author.data.links?.map((l) => l.url),
+});
+
+const seo = {
+  title: `${author.data.name} | CalcFree`,
+  description: author.data.role ? `${author.data.name} — ${author.data.role}` : author.data.name,
+  ogImage: author.data.photo,
+};
+---
+
+<BaseLayout title={seo.title} description={seo.description} ogImage={seo.ogImage}>
+  <Fragment slot="head">
+    <SchemaBreadcrumb items={crumbs} />
+    <script type="application/ld+json" is:inline set:html={personJson}></script>
+  </Fragment>
+
+  <Breadcrumbs items={crumbs} />
+
+  <section class="section" style="padding-top: var(--sp-4);">
+    <div class="container container-narrow">
+      <h1>{author.data.name}</h1>
+      {author.data.role && <p class="lead" style="margin-top: var(--sp-2);">{author.data.role}</p>}
+      {author.data.credentials && <p class="muted">{author.data.credentials}</p>}
+
+      <div class="prose" style="margin-top: var(--sp-5);">
+        <Content />
+      </div>
+
+      {author.data.links && author.data.links.length > 0 && (
+        <ul class="author-links">
+          {author.data.links.map((l) => (
+            <li><a href={l.url} rel="me noopener" target="_blank">{l.label}</a></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  {authoredTools.length > 0 && (
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <h2>Tools by {author.data.name}</h2>
+        <div class="grid grid-3" style="margin-top: var(--sp-4);">
+          {authoredTools.map((t) => (
+            <ToolCard title={t.title} href={t.href} summary={t.summary} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {authoredPosts.length > 0 && (
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <h2>Articles by {author.data.name}</h2>
+        <div class="grid grid-3" style="margin-top: var(--sp-4);">
+          {authoredPosts.map((p) => (
+            <BlogCard title={p.title} href={p.href} excerpt={p.excerpt} date={p.date} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .author-links {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--sp-5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+  .author-links a {
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+</style>

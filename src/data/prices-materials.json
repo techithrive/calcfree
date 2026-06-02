@@ -1,0 +1,41 @@
+{
+  "_note": "Representative material unit costs for the home-project calculators (fence, retaining wall, paver patio, concrete/gravel) added in later batches. These vary widely by region, supplier and date — treat as rough planning figures and update from local quotes. Currency handled per tool (USD/CAD/GBP).",
+  "last_reviewed": "2026-06",
+  "fence": {
+    "post_spacing_ft": 8,
+    "concrete_bags_per_post": 2,
+    "materials": {
+      "wood": { "per_linear_ft": 18, "gate_each": 220 },
+      "vinyl": { "per_linear_ft": 28, "gate_each": 350 },
+      "chain_link": { "per_linear_ft": 12, "gate_each": 150 },
+      "aluminium": { "per_linear_ft": 32, "gate_each": 400 }
+    },
+    "labour_per_linear_ft": { "low": 10, "high": 25 }
+  },
+  "retaining_wall": {
+    "materials": {
+      "block": { "per_sqft_face": 18 },
+      "poured_concrete": { "per_sqft_face": 30 },
+      "timber": { "per_sqft_face": 16 },
+      "boulder": { "per_sqft_face": 25 }
+    },
+    "base_gravel_per_cuyd": 45,
+    "labour_per_sqft_face": { "low": 20, "high": 45 }
+  },
+  "paver_patio": {
+    "materials": {
+      "concrete_paver": { "per_sqft": 4 },
+      "brick": { "per_sqft": 6 },
+      "natural_stone": { "per_sqft": 12 }
+    },
+    "base_gravel_per_cuyd": 45,
+    "bedding_sand_per_cuyd": 40,
+    "labour_per_sqft": { "low": 8, "high": 18 }
+  },
+  "concrete_gravel": {
+    "ready_mix_per_cuyd": 165,
+    "bag_yield_cuft": 0.6,
+    "bag_cost": 7,
+    "gravel_per_cuyd": 45
+  }
+}

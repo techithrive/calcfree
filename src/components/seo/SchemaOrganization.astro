@@ -1,0 +1,29 @@
+---
+/**
+ * SchemaOrganization — site-wide Organization JSON-LD. Reads CMS settings.
+ * Logo is included; sameAs only when profile URLs are provided.
+ */
+import { getEntry } from 'astro:content';
+import { SITE_URL, absoluteUrl, toJsonLd } from '../../lib/schema';
+import entities from '../../data/entities.json';
+
+const settings = await getEntry('settings', 'settings');
+const name = settings?.data.organization_name ?? 'CalcFree';
+const logo = absoluteUrl(settings?.data.organization_logo ?? '/logo.svg');
+const sameAs = settings?.data.organization_sameas;
+const knowsAbout = entities.organization?.knowsAbout;
+
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name,
+  url: SITE_URL,
+  logo,
+  knowsAbout: knowsAbout && knowsAbout.length ? knowsAbout : undefined,
+  sameAs: sameAs && sameAs.length ? sameAs : undefined,
+};
+
+const json = toJsonLd(data);
+---
+
+<script type="application/ld+json" is:inline set:html={json}></script>

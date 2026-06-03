@@ -134,6 +134,7 @@ const categories = defineCollection({
     ...seo,
     intro_copy: z.string(), // unique 150–300 words
     icon: z.string().optional(), // svg id or short token
+    image: z.string().optional(), // branded category visual (public path)
     order: z.number().default(0),
     featured_tool_slugs: z.array(z.string()).optional(),
   }),

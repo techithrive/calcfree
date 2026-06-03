@@ -25,3 +25,7 @@ A calculator is a model, and every model simplifies. Our tools cover the common 
 Rates and prices are reviewed each tax year, or sooner when rules change, and every tool carries a visible "last reviewed" date. Our Methodology, Sources and Editorial pages explain in more detail how tools are built, how data is chosen, and how errors are corrected. If you spot something that looks wrong, the Contact page tells you how to flag it.
 
 CalcFree is built and maintained by [Techithrive](https://techithrive.com), a web development studio. The site is free to use and supported by advertising.
+
+## Built by Techithrive
+
+CalcFree is an independent digital publishing platform. The technology behind it — the calculator framework, content system and performance work — is engineered by [Techithrive](https://techithrive.com), a studio that builds calculator platforms, web applications, content systems and performance-focused websites. CalcFree is run as its own publishing project; Techithrive's role is the engineering underneath it. You can read more about [how CalcFree is built](/platform/).

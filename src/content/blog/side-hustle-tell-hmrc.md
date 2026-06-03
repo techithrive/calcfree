@@ -6,6 +6,7 @@ category: uk-contractor-tax
 seo_title: Do I Need to Tell HMRC About My Side Hustle? | Plain Guide
 meta_description: When a side hustle becomes taxable, how the £1,000 trading allowance works, and when you need to register for Self Assessment — explained simply.
 excerpt: Selling online or freelancing on the side? Here's the simple rule for when HMRC needs to know, and how the £1,000 trading allowance keeps small earnings tax-free.
+featured_image: /images/assets/blog-side-hustle.webp
 quick_answer: If you earn more than £1,000 from a side hustle in a tax year, you generally need to tell HMRC and register for Self Assessment. Below £1,000, the trading allowance usually means there's nothing to declare. The profit above £1,000 is taxed at your marginal rate, on top of your main income.
 key_takeaways:
   - The £1,000 trading allowance lets you earn up to £1,000 a year tax-free from a side hustle.

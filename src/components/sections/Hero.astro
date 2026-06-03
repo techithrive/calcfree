@@ -14,6 +14,7 @@ interface Props {
   secondaryText?: string;
   secondaryHref?: string;
   trustNote?: string;
+  heroImage?: string;
 }
 
 const {
@@ -24,6 +25,7 @@ const {
   secondaryText,
   secondaryHref,
   trustNote = 'Free to use · calculations run in your browser · sources you can check',
+  heroImage,
 } = Astro.props;
 ---
 
@@ -43,19 +45,23 @@ const {
     </div>
 
     <div class="hero-visual" aria-hidden="true">
-      <div class="preview-card">
-        <div class="preview-head">
-          <span class="preview-dot"></span>
-          <span class="preview-title">Example calculation</span>
+      {heroImage ? (
+        <img class="hero-img" src={heroImage} alt="" width="1000" height="760" decoding="async" fetchpriority="high" />
+      ) : (
+        <div class="preview-card">
+          <div class="preview-head">
+            <span class="preview-dot"></span>
+            <span class="preview-title">Example calculation</span>
+          </div>
+          <div class="preview-rows">
+            <div class="preview-row"><span>Gross earnings</span><span>£32,000</span></div>
+            <div class="preview-row"><span>Allowable expenses</span><span>£3,000</span></div>
+            <div class="preview-row"><span>Tax &amp; NI due</span><span>£4,272</span></div>
+            <div class="preview-row preview-emph"><span>Estimated refund</span><span>£1,728</span></div>
+          </div>
+          <div class="preview-foot"><Icon name="source" size={14} /> Assumptions shown · source linked</div>
         </div>
-        <div class="preview-rows">
-          <div class="preview-row"><span>Gross earnings</span><span>£32,000</span></div>
-          <div class="preview-row"><span>Allowable expenses</span><span>£3,000</span></div>
-          <div class="preview-row"><span>Tax &amp; NI due</span><span>£4,272</span></div>
-          <div class="preview-row preview-emph"><span>Estimated refund</span><span>£1,728</span></div>
-        </div>
-        <div class="preview-foot"><Icon name="source" size={14} /> Assumptions shown · source linked</div>
-      </div>
+      )}
     </div>
   </div>
 </section>
@@ -94,5 +100,11 @@ const {
   .preview-foot {
     margin-top: var(--sp-3); display: flex; align-items: center; gap: 0.4rem;
     font-size: var(--fs-200); color: var(--ink-muted);
+  }
+  .hero-img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-xl);
+    filter: drop-shadow(0 18px 40px rgba(20,20,28,0.14));
   }
 </style>

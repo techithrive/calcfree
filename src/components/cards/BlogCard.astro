@@ -1,8 +1,7 @@
 ---
 /**
- * BlogCard — blog index, homepage "latest", and related-posts. Includes a
- * lightweight SVG thumbnail band (category-tinted, no stock art), an optional
- * category label, the date and the excerpt — for fast scanning at scale.
+ * BlogCard — blog index, homepage "latest", related posts. Shows a real
+ * featured image when provided; falls back to a branded tinted icon band.
  */
 import Icon from '../ui/Icon.astro';
 
@@ -14,9 +13,10 @@ interface Props {
   author?: string;
   category?: string;
   icon?: string;
+  image?: string;
 }
 
-const { title, href, excerpt, date, author, category, icon = 'doc' } = Astro.props;
+const { title, href, excerpt, date, author, category, icon = 'doc', image } = Astro.props;
 
 let dateLabel = '';
 if (date) {
@@ -28,7 +28,11 @@ if (date) {
 ---
 
 <a class="card card-link post" href={href}>
-  <span class="post-thumb" aria-hidden="true"><Icon name={icon} size={30} /></span>
+  {image ? (
+    <img class="post-img" src={image} alt="" width="800" height="450" loading="lazy" decoding="async" />
+  ) : (
+    <span class="post-thumb" aria-hidden="true"><Icon name={icon} size={30} /></span>
+  )}
   <div class="post-body">
     {category && <span class="post-cat">{category}</span>}
     <h3>{title}</h3>
@@ -44,32 +48,20 @@ if (date) {
 </a>
 
 <style>
-  .post {
-    padding: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+  .post { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .post-img {
+    width: 100%; height: 168px; object-fit: cover; display: block;
+    border-bottom: 1px solid var(--line); background: var(--accent-tint);
   }
   .post-thumb {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 96px;
-    background:
-      radial-gradient(200px 120px at 70% 0%, var(--accent-tint-2) 0%, transparent 70%),
-      var(--accent-tint);
-    color: var(--accent-strong);
-    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center; height: 96px;
+    background: radial-gradient(200px 120px at 70% 0%, var(--accent-tint-2) 0%, transparent 70%), var(--accent-tint);
+    color: var(--accent-strong); border-bottom: 1px solid var(--line);
   }
   .post-body { padding: var(--sp-5); }
   .post-cat {
-    display: inline-block;
-    font-size: var(--fs-200);
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--accent-strong);
-    margin-bottom: var(--sp-2);
+    display: inline-block; font-size: var(--fs-200); font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--accent-strong); margin-bottom: var(--sp-2);
   }
   .post h3 { margin: 0 0 var(--sp-1); font-size: var(--fs-500); }
   .post-meta { margin-top: var(--sp-3); font-size: var(--fs-300); }

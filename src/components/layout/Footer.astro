@@ -36,6 +36,7 @@ const trust = [
   { label: 'Methodology', href: '/methodology/' },
   { label: 'Sources Policy', href: '/sources-policy/' },
   { label: 'Review Policy', href: '/review-policy/' },
+  { label: 'Platform', href: '/platform/' },
 ];
 ---
 
@@ -95,7 +96,11 @@ const trust = [
 
     <div class="footer-credit">
       <span>© {year} CalcFree. Estimates for planning, not financial or legal advice.</span>
-      <span>{footerCredit}</span>
+      <a class="credit-link" href="https://techithrive.com" target="_blank" rel="noopener">{footerCredit}</a>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-credit .credit-link { color: #fff; text-decoration: underline; }
+</style>

@@ -6,6 +6,7 @@ category: uk-contractor-tax
 seo_title: Company Car Tax Explained | EV vs Petrol BIK Compared
 meta_description: How company car tax (benefit-in-kind) works, why electric cars are taxed so lightly compared with petrol, and what drives the figure — P11D, CO2 and your tax band.
 excerpt: A company car is a taxable perk, and the tax gap between an electric car and a petrol one is enormous. Here's how benefit-in-kind works and why EVs win.
+featured_image: /images/assets/blog-company-car.webp
 quick_answer: Company car tax is your income tax band applied to a benefit-in-kind value, which is the car's P11D value multiplied by an emissions-based percentage. Electric cars currently sit at a very low percentage, so the tax is a fraction of an equivalent petrol car's — often the difference between a few hundred pounds and a few thousand a year.
 key_takeaways:
   - Company car tax = P11D value × an emissions-based BIK percentage × your income tax band.

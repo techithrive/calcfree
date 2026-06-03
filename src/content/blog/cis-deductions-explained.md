@@ -6,6 +6,7 @@ category: uk-contractor-tax
 seo_title: CIS Deductions Explained Simply | What Gets Taken & Why
 meta_description: A plain-English guide to Construction Industry Scheme deductions — why your contractor takes 20% or 30%, what it's really for, and how it affects your tax.
 excerpt: If a contractor takes a chunk off your pay before you see it, that's CIS. Here's what the deduction is, why it happens, and why most subcontractors get some of it back.
+featured_image: /images/assets/blog-cis-deductions.webp
 quick_answer: Under the Construction Industry Scheme, a contractor deducts 20% from a registered subcontractor's labour (30% if you're not registered) and pays it to HMRC as an advance on your tax bill. Because it's taken before expenses and your personal allowance are counted, most subcontractors end up owed a refund after filing.
 key_takeaways:
   - CIS deductions are an advance payment of your tax, not an extra tax.

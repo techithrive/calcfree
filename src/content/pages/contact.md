@@ -21,3 +21,7 @@ If a figure or calculation looks off, please include the tool's name, the number
 ## What we can't do
 
 We can't give personal financial, tax or legal advice, or tell you what you should do in your specific situation — that's a job for a qualified professional who can see the full picture. What we can do is explain how a tool works, fix mistakes, and take suggestions for new calculators on board.
+
+## Platform support
+
+Website platform support is provided by [Techithrive](https://techithrive.com), the studio that engineers CalcFree. For questions about the calculators or content, use the email above.

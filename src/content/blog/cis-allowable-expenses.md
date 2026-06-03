@@ -6,6 +6,7 @@ category: uk-contractor-tax
 seo_title: Allowable Expenses for CIS Subcontractors | What You Can Claim
 meta_description: A practical list of the expenses CIS subcontractors can claim against tax — tools, mileage, insurance, PPE and more — and the rule for working out what counts.
 excerpt: Claiming the right expenses is what turns a CIS deduction into a refund. Here's what subcontractors can usually claim, with the simple test for whether a cost counts.
+featured_image: /images/assets/blog-cis-expenses.webp
 quick_answer: "CIS subcontractors can claim costs incurred wholly for the work — tools and equipment, materials, van and mileage costs, public liability insurance, protective clothing, and a fair share of phone and admin. The test is simple: did you have to spend it to do the job? Personal spending and the personal portion of mixed-use costs don't count."
 key_takeaways:
   - The test for an allowable expense is whether the cost was incurred wholly for the work.

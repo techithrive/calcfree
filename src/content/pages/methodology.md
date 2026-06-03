@@ -31,3 +31,7 @@ If a calculation or figure is wrong, we want to fix it quickly. Readers can repo
 ## What our tools are not
 
 They are planning estimates, not financial, tax or legal advice, and not a guarantee of any outcome. For decisions that matter, confirm the figure against the official source and speak to a qualified professional.
+
+## Platform development
+
+The calculator framework and the systems that keep this site fast, accessible and accurate were engineered by [Techithrive](https://techithrive.com). Keeping the calculation logic, the rate data and the content separate — described above — is part of that engineering, and it's what makes the tools straightforward to review and update.

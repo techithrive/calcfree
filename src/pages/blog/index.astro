@@ -23,6 +23,7 @@ const cards = await Promise.all(
       excerpt: p.data.excerpt,
       date: p.data.published_date,
       category: cat?.data.title,
+      image: p.data.featured_image,
     };
   })
 );
@@ -47,7 +48,7 @@ const crumbs = [{ label: 'Home', href: '/' }, { label: 'Blog' }];
       {cards.length > 0 ? (
         <div class="grid grid-3" style="margin-top: var(--sp-6);">
           {cards.map((p) => (
-            <BlogCard title={p.title} href={p.href} excerpt={p.excerpt} date={p.date} category={p.category} />
+            <BlogCard title={p.title} href={p.href} excerpt={p.excerpt} date={p.date} category={p.category} image={p.image} />
           ))}
         </div>
       ) : (

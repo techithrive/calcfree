@@ -32,6 +32,7 @@ const categoryCards = await Promise.all(
       href: categoryHref(c),
       description: c.data.meta_description,
       icon: c.data.icon,
+      image: c.data.image,
       count: await categoryToolCount(c.id),
     }))
 );
@@ -54,6 +55,7 @@ const latestPosts = publishedPosts.slice(0, 3).map((p) => ({
   href: blogHref(p),
   excerpt: p.data.excerpt,
   date: p.data.published_date,
+  image: p.data.featured_image,
 }));
 
 const seoTitle = hp?.data.seo_title ?? 'CalcFree — practical calculators and tools';
@@ -74,6 +76,7 @@ const steps = [
     ctaHref="/tools/"
     secondaryText="Read the guides"
     secondaryHref="/blog/"
+    heroImage="/images/assets/hero-calculator.webp"
   />
 
   {hp?.data.value_proposition && (
@@ -94,7 +97,7 @@ const steps = [
         </div>
         <div class="grid grid-3">
           {categoryCards.map((c) => (
-            <CategoryCard title={c.title} href={c.href} description={c.description} icon={c.icon} count={c.count} />
+            <CategoryCard title={c.title} href={c.href} description={c.description} icon={c.icon} count={c.count} image={c.image} />
           ))}
         </div>
       </div>

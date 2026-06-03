@@ -6,6 +6,7 @@ category: uk-contractor-tax
 seo_title: IR35 Explained for Contractors | Inside vs Outside in Plain English
 meta_description: What IR35 actually means, the difference between inside and outside IR35, who decides, and why it changes your take-home pay — explained without jargon.
 excerpt: "IR35 sounds complicated, but the core idea is simple: are you genuinely in business for yourself, or working like an employee? Here's what that means for your pay."
+featured_image: /images/assets/blog-ir35.webp
 quick_answer: IR35 is the rule that decides whether a contractor is genuinely self-employed or effectively an employee for tax. Inside IR35, you're taxed much like an employee and the limited-company dividend advantage disappears. Outside IR35, you can be paid more tax-efficiently. For medium and large clients, the client decides your status.
 key_takeaways:
   - IR35 asks whether you're truly in business for yourself or working like an employee.

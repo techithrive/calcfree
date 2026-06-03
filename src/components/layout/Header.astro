@@ -1,17 +1,24 @@
 ---
 /**
- * Site header: logo + primary navigation + search + a prominent "Browse tools"
- * CTA. Navigation is a native <details> disclosure so it works without JS.
+ * Site header: logo + nav (Categories mega-menu, Tools, Blog, About, Contact)
+ * + Search + "Browse tools" CTA. No-JS friendly: the Categories dropdown and
+ * the mobile menu are native <details> disclosures. All links are crawlable.
  */
 import Icon from '../ui/Icon.astro';
+import { getCollection } from 'astro:content';
+import { activeCategories, categoryHref, toolHref } from '../../lib/internal-links';
 
-const nav = [
-  { label: 'All tools', href: '/tools/' },
-  { label: 'Categories', href: '/#categories' },
-  { label: 'Blog', href: '/blog/' },
-  { label: 'About', href: '/about/' },
-  { label: 'Contact', href: '/contact/' },
-];
+const cats = await activeCategories(1);
+const allTools = await getCollection('tools', ({ data }) => !data.draft);
+const menu = cats.map((c) => ({
+  title: c.data.title,
+  href: categoryHref(c),
+  icon: c.data.icon ?? 'calculator',
+  tools: allTools
+    .filter((t) => t.data.category?.id === c.id)
+    .slice(0, 6)
+    .map((t) => ({ title: t.data.title, href: toolHref(t) })),
+}));
 ---
 
 <header class="site-header">
@@ -20,81 +27,119 @@ const nav = [
       <img src="/logo.svg" alt="CalcFree" width="150" height="30" />
     </a>
 
-    <details class="nav">
-      <summary class="nav-summary" aria-label="Toggle navigation">
-        <span class="nav-summary-icon" aria-hidden="true"></span>
-        <span>Menu</span>
-      </summary>
-      <nav aria-label="Primary">
-        <ul class="nav-list">
-          {nav.map((item) => (
-            <li><a href={item.href}>{item.label}</a></li>
+    <!-- Desktop nav -->
+    <nav class="nav-desktop" aria-label="Primary">
+      <details class="mega">
+        <summary>Categories <span class="caret" aria-hidden="true">▾</span></summary>
+        <div class="mega-panel">
+          {menu.map((c) => (
+            <div class="mega-col">
+              <a class="mega-cat" href={c.href}><span class="mega-ic"><Icon name={c.icon} size={18} /></span>{c.title}</a>
+              <ul>
+                {c.tools.map((t) => (<li><a href={t.href}>{t.title}</a></li>))}
+                <li><a class="mega-all" href={c.href}>All {c.title} →</a></li>
+              </ul>
+            </div>
           ))}
-          <li><a href="/search/" aria-label="Search"><Icon name="search" size={18} /> <span class="nav-search-label">Search</span></a></li>
-          <li class="nav-cta-mobile"><a class="btn btn-primary btn-block" href="/tools/">Browse tools</a></li>
-        </ul>
-      </nav>
-    </details>
+        </div>
+      </details>
+      <a href="/tools/">Tools</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
 
     <div class="nav-actions">
       <a class="nav-search-btn" href="/search/" aria-label="Search"><Icon name="search" size={20} /></a>
       <a class="btn btn-primary nav-cta" href="/tools/">Browse tools</a>
+
+      <!-- Mobile menu -->
+      <details class="nav-mobile">
+        <summary aria-label="Toggle menu"><span class="burger" aria-hidden="true"></span></summary>
+        <nav class="mobile-panel" aria-label="Mobile">
+          <a href="/tools/">Tools</a>
+          <details class="mobile-cats">
+            <summary>Categories</summary>
+            <ul>
+              {menu.map((c) => (<li><a href={c.href}>{c.title}</a></li>))}
+            </ul>
+          </details>
+          <a href="/blog/">Blog</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="/search/">Search</a>
+          <a class="btn btn-primary btn-block" href="/tools/" style="margin-top: var(--sp-2);">Browse tools</a>
+        </nav>
+      </details>
     </div>
   </div>
 </header>
 
 <style>
   .site-header .bar { gap: var(--sp-5); }
-  .nav { position: relative; }
-  .nav-summary {
-    display: inline-flex; align-items: center; gap: 0.45rem;
-    list-style: none; cursor: pointer; font-weight: 600;
-    border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
-    padding: 0.5rem 0.8rem; user-select: none;
-  }
-  .nav-summary::-webkit-details-marker { display: none; }
-  .nav-summary-icon { width: 16px; height: 2px; background: var(--ink); position: relative; }
-  .nav-summary-icon::before, .nav-summary-icon::after {
-    content: ''; position: absolute; left: 0; width: 16px; height: 2px; background: var(--ink);
-  }
-  .nav-summary-icon::before { top: -5px; }
-  .nav-summary-icon::after { top: 5px; }
-
-  .nav-list { list-style: none; margin: 0; padding: 0; }
-  .nav-list a { color: var(--ink-soft); text-decoration: none; font-weight: 500; display: block; }
-  .nav-list a:hover { color: var(--accent-strong); }
-  .nav-cta-mobile { display: block; margin-top: var(--sp-2); }
-  .nav-cta { display: none; }
   .nav-actions { display: flex; align-items: center; gap: var(--sp-3); }
+
+  /* ----- Desktop nav ----- */
+  .nav-desktop { display: none; align-items: center; gap: var(--sp-5); margin-left: auto; }
+  .nav-desktop > a, .mega > summary {
+    color: var(--ink-soft); text-decoration: none; font-weight: 500; cursor: pointer;
+    list-style: none; display: inline-flex; align-items: center; gap: 0.3rem;
+  }
+  .nav-desktop > a:hover, .mega > summary:hover { color: var(--accent-strong); }
+  .mega { position: relative; }
+  .mega > summary::-webkit-details-marker { display: none; }
+  .mega .caret { font-size: 0.7em; transition: transform 0.15s ease; }
+  .mega[open] .caret { transform: rotate(180deg); }
+  .mega-panel {
+    position: absolute; left: 50%; transform: translateX(-50%); top: calc(100% + 14px);
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-raised); padding: var(--sp-5); z-index: 70;
+    display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: var(--sp-5);
+    width: max-content; max-width: 640px;
+  }
+  .mega-cat { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--ink); text-decoration: none; margin-bottom: var(--sp-2); }
+  .mega-ic { color: var(--accent-strong); display: inline-flex; }
+  .mega-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+  .mega-col a { color: var(--ink-soft); text-decoration: none; font-size: 0.93rem; }
+  .mega-col a:hover { color: var(--accent-strong); }
+  .mega-all { font-weight: 600; color: var(--accent-strong) !important; }
+
   .nav-search-btn {
-    display: none;
-    align-items: center; justify-content: center;
+    display: none; align-items: center; justify-content: center;
     width: 42px; height: 42px; border-radius: var(--radius-sm);
     border: 1px solid var(--line-strong); color: var(--ink-soft);
   }
   .nav-search-btn:hover { border-color: var(--ink-muted); color: var(--accent-strong); }
-  .nav-search-label { display: inline; }
+  .nav-cta { display: none; }
 
-  /* Mobile: native disclosure dropdown */
-  @media (max-width: 859px) {
-    .nav[open] .nav-list {
-      position: absolute; right: 0; top: calc(100% + 10px);
-      background: var(--surface); border: 1px solid var(--line);
-      border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: var(--sp-4); min-width: 230px; display: flex; flex-direction: column;
-      gap: var(--sp-3); z-index: 60;
-    }
-    .nav-list a { display: flex; align-items: center; gap: 0.5rem; }
+  /* ----- Mobile menu: compact, right-aligned ----- */
+  .nav-mobile { position: relative; }
+  .nav-mobile > summary {
+    list-style: none; cursor: pointer; display: inline-flex; align-items: center;
+    width: 42px; height: 42px; justify-content: center;
+    border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
   }
+  .nav-mobile > summary::-webkit-details-marker { display: none; }
+  .burger, .burger::before, .burger::after { display: block; width: 18px; height: 2px; background: var(--ink); position: relative; }
+  .burger::before, .burger::after { content: ''; position: absolute; left: 0; }
+  .burger::before { top: -6px; } .burger::after { top: 6px; }
+  .mobile-panel {
+    position: absolute; right: 0; top: calc(100% + 10px);
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: var(--sp-4); min-width: 220px; max-width: 80vw;
+    display: flex; flex-direction: column; gap: var(--sp-3); z-index: 70;
+  }
+  .mobile-panel > a { color: var(--ink-soft); text-decoration: none; font-weight: 500; }
+  .mobile-panel > a:hover { color: var(--accent-strong); }
+  .mobile-cats > summary { cursor: pointer; font-weight: 500; color: var(--ink-soft); list-style: none; }
+  .mobile-cats > summary::-webkit-details-marker { display: none; }
+  .mobile-cats ul { list-style: none; margin: var(--sp-2) 0 0; padding: 0 0 0 var(--sp-3); display: flex; flex-direction: column; gap: var(--sp-2); border-left: 2px solid var(--line); }
+  .mobile-cats a { color: var(--ink-muted); text-decoration: none; font-size: 0.92rem; }
 
-  /* Desktop: inline nav, hide toggle, show CTA + search button */
-  @media (min-width: 860px) {
-    .nav-summary { display: none; }
-    .nav-list { display: flex; gap: var(--sp-5); align-items: center; }
-    .nav-list a { display: inline-flex; align-items: center; gap: 0.35rem; }
-    .nav-search-label { display: none; }
-    .nav-cta-mobile { display: none; }
-    .nav-cta { display: inline-flex; }
+  @media (min-width: 900px) {
+    .nav-desktop { display: flex; }
     .nav-search-btn { display: inline-flex; }
+    .nav-cta { display: inline-flex; }
+    .nav-mobile { display: none; }
   }
 </style>

@@ -1,0 +1,25 @@
+---
+/**
+ * /platform/ — explains how CalcFree is built (performance, CMS, SEO, a11y,
+ * calculator framework). Content from the 'pages' collection.
+ */
+import { getEntry, render } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+import SchemaBreadcrumb from '../components/seo/SchemaBreadcrumb.astro';
+
+const entry = await getEntry('pages', 'platform');
+if (!entry) {
+  throw new Error("Missing content: src/content/pages/platform.md is required for /platform/.");
+}
+const { Content } = await render(entry);
+const crumbs = [{ label: 'Home', href: '/' }, { label: entry.data.title }];
+const seo = {
+  title: entry.data.seo_title ?? `${entry.data.title} | CalcFree`,
+  description: entry.data.meta_description,
+};
+---
+
+<PageLayout seo={seo} breadcrumbs={crumbs} title={entry.data.title} lastUpdated={entry.data.last_updated}>
+  <SchemaBreadcrumb slot="head" items={crumbs} />
+  <Content />
+</PageLayout>

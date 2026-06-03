@@ -3,6 +3,7 @@ title: UK Contractor & Tax Tools
 seo_title: UK Contractor & Tax Calculators | CalcFree
 meta_description: Calculators for UK contractors, subcontractors and the self-employed — CIS refunds, umbrella vs limited company, side-hustle tax and company car tax.
 icon: tax
+image: /images/assets/category-uk-contractor-tax.webp
 order: 1
 intro_copy: |
   If you contract, subcontract or run a side business in the UK, your tax is rarely as simple as a payslip. CIS deductions come off before your expenses are counted. Umbrella and limited-company routes leave very different amounts in your pocket. A side hustle can quietly tip you into a higher tax band. The tools in this section are built around those real situations rather than generic sums.

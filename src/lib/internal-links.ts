@@ -24,6 +24,7 @@ export interface BlogLink {
   excerpt?: string;
   date?: Date;
   author?: string;
+  image?: string;
 }
 
 type ToolEntry = CollectionEntry<'tools'>;
@@ -63,6 +64,7 @@ export function blogToLink(entry: BlogEntry, authorName?: string): BlogLink {
     excerpt: entry.data.excerpt,
     date: entry.data.updated_date ?? entry.data.published_date,
     author: authorName,
+    image: entry.data.featured_image,
   };
 }
 

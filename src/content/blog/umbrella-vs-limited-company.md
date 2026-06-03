@@ -6,6 +6,7 @@ category: uk-contractor-tax
 seo_title: Umbrella vs Limited Company | Which Keeps More of Your Pay?
 meta_description: A straight comparison of contracting through an umbrella company versus your own limited company — how each is taxed, when each wins, and the IR35 catch.
 excerpt: Two contractors on the same day rate can take home very different amounts. Here's how umbrella and limited-company pay actually differ, and when each one makes sense.
+featured_image: /images/assets/blog-umbrella-vs-ltd.webp
 quick_answer: Outside IR35, a limited company usually leaves you with more take-home than an umbrella, because profit can be drawn as dividends that avoid National Insurance. Inside IR35, that advantage largely disappears and an umbrella is often the simpler, similarly-priced choice.
 key_takeaways:
   - Through an umbrella you're an employee; through a limited company you're an owner-director.

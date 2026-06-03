@@ -80,5 +80,17 @@ const authorObj = author
     <SchemaBreadcrumb items={crumbs} />
   </Fragment>
 
+  {post.data.featured_image && (
+    <img
+      slot="hero-image"
+      class="article-featured"
+      src={post.data.featured_image}
+      alt=""
+      width="800"
+      height="450"
+      decoding="async"
+    />
+  )}
+
   <Content />
 </BlogLayout>

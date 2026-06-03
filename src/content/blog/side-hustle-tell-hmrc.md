@@ -27,7 +27,7 @@ related_blogs:
   - cis-allowable-expenses
 author: khurram-nisar
 published_date: 2026-04-08
-updated_date: 2026-06-02
+updated_date: 2026-06-03
 ---
 
 Side hustles have gone mainstream — reselling, freelancing, tutoring, making things to sell. And with that comes a quietly nagging question: at what point does HMRC need to know? The good news is the rule is clearer than most people fear.

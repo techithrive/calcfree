@@ -74,37 +74,34 @@ const reviewedLabel = lastReviewed
 
   <Breadcrumbs items={breadcrumbs} />
 
-  <!-- Tool hero band -->
+  <!-- Tool hero band: intro left, calculator right (above the fold) -->
   <div class="tool-hero">
-    <div class="container container-narrow">
-      <span class="eyebrow">Calculator</span>
-      <h1>{h1}</h1>
-      {intro && <p class="lead">{intro}</p>}
+    <div class="container tool-hero-grid">
+      <div class="tool-hero-intro">
+        <span class="eyebrow">Calculator</span>
+        <h1>{h1}</h1>
+        {intro && <p class="lead">{intro}</p>}
+        {quickAnswer && (
+          <div class="callout" style="margin-top: var(--sp-4);">
+            <strong>In short:</strong> {quickAnswer}
+          </div>
+        )}
+      </div>
+      <div class="tool-hero-calc">
+        <h2 class="calc-heading">Try the calculator</h2>
+        <slot name="calculator" />
+      </div>
     </div>
   </div>
 
   <article class="section" style="padding-top: var(--sp-6);">
     <div class="container container-narrow">
-      {quickAnswer && (
-        <div class="callout" style="margin-top: 0;">
-          <strong>In short:</strong> {quickAnswer}
-        </div>
-      )}
-
       <KeyTakeaways points={keyTakeaways} />
-
-      {show('after-intro') && <AdSlot size="leaderboard" />}
-
-      {/* Calculator + result. No ad ever sits between input and result. */}
-      <div class="calc-wrap" style="margin-top: var(--sp-6);">
-        <h2 class="calc-heading">Try the calculator</h2>
-        <slot name="calculator" />
-      </div>
 
       {show('after-result') && <AdSlot size="rectangle" />}
 
       {/* Assumptions + source */}
-      <div class="callout callout-assume" style="margin-top: var(--sp-6);">
+      <div class="callout callout-assume" style="margin-top: var(--sp-5);">
         <p style="margin:0 0 var(--sp-2);"><strong>What this assumes</strong></p>
         <div class="prose"><slot name="assumptions" /></div>
         {sourceUrl && (

@@ -6,7 +6,7 @@
  */
 import Icon from '../ui/Icon.astro';
 import { getCollection } from 'astro:content';
-import { activeCategories, categoryHref, toolHref } from '../../lib/internal-links';
+import { activeCategories, categoryHref, toolHref, blogHref } from '../../lib/internal-links';
 
 const cats = await activeCategories(1);
 const allTools = await getCollection('tools', ({ data }) => !data.draft);
@@ -19,6 +19,13 @@ const menu = cats.map((c) => ({
     .slice(0, 6)
     .map((t) => ({ title: t.data.title, href: toolHref(t) })),
 }));
+
+// Popular tools (first few) + latest guides for the mega-menu's right rail.
+const popular = allTools.slice(0, 4).map((t) => ({ title: t.data.title, href: toolHref(t) }));
+const latestGuides = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => (b.data.published_date?.valueOf() ?? 0) - (a.data.published_date?.valueOf() ?? 0))
+  .slice(0, 3)
+  .map((p) => ({ title: p.data.title, href: blogHref(p) }));
 ---
 
 <header class="site-header">
@@ -41,6 +48,16 @@ const menu = cats.map((c) => ({
               </ul>
             </div>
           ))}
+          <div class="mega-col mega-rail">
+            <p class="mega-rail-h">Popular tools</p>
+            <ul>
+              {popular.map((t) => (<li><a href={t.href}>{t.title}</a></li>))}
+            </ul>
+            <p class="mega-rail-h">Latest guides</p>
+            <ul>
+              {latestGuides.map((g) => (<li><a href={g.href}>{g.title}</a></li>))}
+            </ul>
+          </div>
         </div>
       </details>
       <a href="/tools/">Tools</a>
@@ -89,20 +106,26 @@ const menu = cats.map((c) => ({
   .mega { position: relative; }
   .mega > summary::-webkit-details-marker { display: none; }
   .mega .caret { font-size: 0.7em; transition: transform 0.15s ease; }
-  .mega[open] .caret { transform: rotate(180deg); }
+  .mega[open] .caret, .mega:hover .caret { transform: rotate(180deg); }
   .mega-panel {
     position: absolute; left: 50%; transform: translateX(-50%); top: calc(100% + 14px);
     background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg);
     box-shadow: var(--shadow-raised); padding: var(--sp-5); z-index: 70;
-    display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: var(--sp-5);
-    width: max-content; max-width: 640px;
+    display: grid; grid-template-columns: repeat(3, minmax(200px, 1fr)); gap: var(--sp-6);
+    width: max-content; max-width: 760px;
   }
+  /* Open on hover (desktop) and on click (keyboard/touch via <details open>). */
+  .mega:not([open]) .mega-panel { display: none; }
+  .mega:hover .mega-panel { display: grid; }
   .mega-cat { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--ink); text-decoration: none; margin-bottom: var(--sp-2); }
   .mega-ic { color: var(--accent-strong); display: inline-flex; }
   .mega-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; }
   .mega-col a { color: var(--ink-soft); text-decoration: none; font-size: 0.93rem; }
   .mega-col a:hover { color: var(--accent-strong); }
   .mega-all { font-weight: 600; color: var(--accent-strong) !important; }
+  .mega-rail { border-left: 1px solid var(--line); padding-left: var(--sp-5); }
+  .mega-rail-h { font-size: var(--fs-200); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); margin: 0 0 var(--sp-2); }
+  .mega-rail ul { margin-bottom: var(--sp-4); }
 
   .nav-search-btn {
     display: none; align-items: center; justify-content: center;

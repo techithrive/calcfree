@@ -73,7 +73,7 @@ related_blogs:
   - company-car-tax-ev-vs-petrol
   - umbrella-vs-limited-company
 author: khurram-nisar
-last_reviewed: 2026-06-02
+last_reviewed: 2026-06-03
 ---
 
 ## What benefit-in-kind actually means

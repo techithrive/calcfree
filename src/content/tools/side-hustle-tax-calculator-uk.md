@@ -56,7 +56,7 @@ related_blogs:
   - side-hustle-tell-hmrc
   - cis-allowable-expenses
 author: khurram-nisar
-last_reviewed: 2026-06-02
+last_reviewed: 2026-06-03
 ---
 
 ## When a side hustle becomes taxable

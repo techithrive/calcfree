@@ -27,7 +27,7 @@ related_blogs:
   - cis-deductions-explained
 author: khurram-nisar
 published_date: 2026-02-18
-updated_date: 2026-06-02
+updated_date: 2026-06-03
 ---
 
 Expenses are the part of CIS that actually puts money back in your pocket. Because the CIS deduction is taken from your gross labour before any costs are considered, the expenses you claim directly reduce your taxable profit — and that's what determines your real tax bill and, usually, your refund. Under-claim and you leave money with HMRC; over-claim and you risk a problem. So it's worth getting right.

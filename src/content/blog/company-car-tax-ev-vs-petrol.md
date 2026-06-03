@@ -27,7 +27,7 @@ related_blogs:
   - umbrella-vs-limited-company
 author: khurram-nisar
 published_date: 2026-05-06
-updated_date: 2026-06-02
+updated_date: 2026-06-03
 ---
 
 A company car used to be a perk that quietly cost higher earners a fortune in tax. Electric cars flipped that on its head, and the gap between an EV and a petrol equivalent is now large enough to change which car you'd choose. Understanding why comes down to one mechanism: benefit-in-kind.

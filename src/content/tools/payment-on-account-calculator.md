@@ -53,7 +53,7 @@ related_tools:
 related_blogs:
   - side-hustle-tell-hmrc
 author: khurram-nisar
-last_reviewed: 2026-06-02
+last_reviewed: 2026-06-03
 ---
 
 ## The mystery January bill, explained

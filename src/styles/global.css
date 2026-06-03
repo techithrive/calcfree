@@ -642,14 +642,40 @@ select.input {
     radial-gradient(700px 280px at 85% -20%, var(--accent-tint) 0%, transparent 65%),
     var(--surface-warm);
   border-bottom: 1px solid var(--line);
-  padding-block: var(--sp-7) var(--sp-6);
+  padding-block: var(--sp-7) var(--sp-7);
 }
 .tool-hero h1 {
   margin: 0;
-  max-width: 20ch;
+  max-width: 18ch;
 }
 .tool-hero .lead {
   margin-top: var(--sp-3);
+}
+.tool-hero-grid {
+  display: grid;
+  gap: var(--sp-6);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+@media (min-width: 960px) {
+  .tool-hero-grid {
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: var(--sp-7);
+  }
+}
+/* The calculator itself, presented as a raised product card (the hero) */
+.tool-hero-calc {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  padding: var(--sp-5) var(--sp-5) var(--sp-6);
+}
+.tool-hero-calc .calc-heading {
+  font-size: var(--fs-500);
+  margin: 0 0 var(--sp-4);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--line);
 }
 
 /* "Try the calculator" heading above the form */

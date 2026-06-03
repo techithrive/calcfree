@@ -11,6 +11,7 @@ import KeyTakeaways from '../components/sections/KeyTakeaways.astro';
 import RelatedTools from '../components/sections/RelatedTools.astro';
 import RelatedBlogs from '../components/sections/RelatedBlogs.astro';
 import AdSlot from '../components/ads/AdSlot.astro';
+import Icon from '../components/ui/Icon.astro';
 import type { ToolCardData } from '../components/sections/FeaturedTools.astro';
 import type { BlogCardData } from '../components/sections/RelatedBlogs.astro';
 
@@ -23,6 +24,8 @@ interface Props {
   updatedDate?: Date;
   quickAnswer?: string;
   keyTakeaways?: string[];
+  readingMinutes?: number;
+  sourcesCount?: number;
   faqs?: { question: string; answer: string }[];
   relatedTools?: ToolCardData[];
   relatedBlogs?: BlogCardData[];
@@ -37,6 +40,8 @@ const {
   updatedDate,
   quickAnswer,
   keyTakeaways = [],
+  readingMinutes,
+  sourcesCount,
   faqs = [],
   relatedTools = [],
   relatedBlogs = [],
@@ -70,6 +75,12 @@ const updated = fmt(updatedDate);
         {published && <>Published {published}. </>}
         {updated && updated !== published && <>Updated {updated}.</>}
       </p>
+      <ul class="article-trust" aria-label="Article details">
+        {readingMinutes && <li><Icon name="doc" size={15} /> {readingMinutes} min read</li>}
+        {(updated || published) && <li><Icon name="calendar" size={15} /> Reviewed {updated ?? published}</li>}
+        {sourcesCount ? <li><Icon name="source" size={15} /> {sourcesCount} source{sourcesCount === 1 ? '' : 's'} cited</li> : null}
+        <li><Icon name="shield" size={15} /> Checked against HMRC guidance</li>
+      </ul>
     </div>
   </div>
 
@@ -140,6 +151,23 @@ const updated = fmt(updatedDate);
     color: var(--ink-muted);
     font-size: 0.95rem;
   }
+  .article-trust {
+    list-style: none;
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+  }
+  .article-trust li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--fs-300);
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .article-trust svg { color: var(--accent-strong); }
   .author-box {
     display: flex;
     gap: var(--sp-4);

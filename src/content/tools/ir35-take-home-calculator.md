@@ -47,7 +47,7 @@ related_blogs:
   - ir35-explained
   - umbrella-vs-limited-company
 author: khurram-nisar
-last_reviewed: 2026-06-02
+last_reviewed: 2026-06-03
 ---
 
 ## What this calculator shows

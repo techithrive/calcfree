@@ -27,7 +27,7 @@ related_blogs:
   - ir35-explained
 author: khurram-nisar
 published_date: 2026-03-04
-updated_date: 2026-06-02
+updated_date: 2026-06-03
 ---
 
 Ask two contractors on identical day rates what they take home and you can get two very different answers. The reason usually isn't the rate — it's how they're set up. The two common routes, an umbrella company and your own limited company, are taxed in fundamentally different ways, and the gap between them can run into thousands a year.

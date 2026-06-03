@@ -27,7 +27,7 @@ related_blogs:
   - cis-allowable-expenses
 author: khurram-nisar
 published_date: 2026-02-10
-updated_date: 2026-06-02
+updated_date: 2026-06-03
 ---
 
 If you work in construction as a subcontractor, you've probably had the slightly deflating experience of agreeing a price, doing the work, and then being paid less than you expected. The missing slice is almost always CIS — the Construction Industry Scheme. It's not a penalty and it's not an extra tax. It's the taxman taking a down payment on your bill before the money reaches you.

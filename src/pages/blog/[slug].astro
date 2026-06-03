@@ -32,6 +32,14 @@ const relatedBlogs = await resolveBlogRefs(post.data.related_blogs);
 
 const { Content } = await render(post);
 
+// Trust indicators: reading time (≈200 wpm) and a rough count of cited sources
+// (distinct gov/official links in the body).
+const bodyText = post.body ?? '';
+const wordCount = bodyText.split(/\s+/).filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.round(wordCount / 200));
+const sourceMatches = bodyText.match(/https?:\/\/(www\.)?(gov\.uk|gov\.scot|ato\.gov\.au|canada\.ca|ontario\.ca|toronto\.ca|ofgem\.gov\.uk)/g) ?? [];
+const sourcesCount = new Set(sourceMatches).size;
+
 const crumbs = [
   { label: 'Home', href: '/' },
   { label: 'Blog', href: '/blog/' },
@@ -61,6 +69,8 @@ const authorObj = author
   updatedDate={post.data.updated_date}
   quickAnswer={post.data.quick_answer}
   keyTakeaways={post.data.key_takeaways}
+  readingMinutes={readingMinutes}
+  sourcesCount={sourcesCount}
   faqs={faqs}
   relatedTools={relatedTools}
   relatedBlogs={relatedBlogs}

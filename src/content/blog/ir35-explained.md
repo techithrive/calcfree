@@ -27,7 +27,7 @@ related_blogs:
   - umbrella-vs-limited-company
 author: khurram-nisar
 published_date: 2026-03-20
-updated_date: 2026-06-02
+updated_date: 2026-06-03
 ---
 
 IR35 has a reputation for being impenetrable, and the official name — "off-payroll working rules" — doesn't help. But the idea underneath it is genuinely simple, and worth understanding because it directly affects how much of your day rate you keep.

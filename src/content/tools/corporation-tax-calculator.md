@@ -46,7 +46,7 @@ related_tools:
 related_blogs:
   - umbrella-vs-limited-company
 author: khurram-nisar
-last_reviewed: 2026-06-02
+last_reviewed: 2026-06-03
 ---
 
 ## How corporation tax actually works

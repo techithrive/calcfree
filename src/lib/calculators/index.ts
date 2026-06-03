@@ -10,6 +10,8 @@ import { paymentOnAccount } from './payment-on-account';
 import { latePenalty } from './late-penalty';
 import { concreteGravel } from './concrete-gravel';
 import { fenceCost } from './fence-cost';
+import { dividendTaxCalc } from './dividend-tax';
+import { salaryVsDividend } from './salary-vs-dividend';
 
 export const calculators: Record<string, Calculator> = {
   [cisTaxRefund.id]: cisTaxRefund,
@@ -22,4 +24,6 @@ export const calculators: Record<string, Calculator> = {
   [latePenalty.id]: latePenalty,
   [concreteGravel.id]: concreteGravel,
   [fenceCost.id]: fenceCost,
+  [dividendTaxCalc.id]: dividendTaxCalc,
+  [salaryVsDividend.id]: salaryVsDividend,
 };

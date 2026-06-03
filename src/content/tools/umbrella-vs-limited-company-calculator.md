@@ -62,7 +62,7 @@ related_blogs:
   - umbrella-vs-limited-company
   - ir35-explained
 author: khurram-nisar
-last_reviewed: 2026-06-02
+last_reviewed: 2026-06-03
 ---
 
 ## The two ways contractors get paid
